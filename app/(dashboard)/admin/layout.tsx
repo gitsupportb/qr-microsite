@@ -1,7 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { logoutAction } from '@/lib/actions/auth'
-import { Button } from '@/components/ui/button'
+import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar'
+import { AppSidebar } from '@/components/admin/app-sidebar'
+import { Separator } from '@/components/ui/separator'
 
 export default async function AdminLayout({
   children,
@@ -18,18 +19,16 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="border-b bg-white px-6 py-4">
-        <div className="flex items-center justify-between">
-          <h1 className="text-lg font-semibold">Admin Dashboard</h1>
-          <form action={logoutAction}>
-            <Button variant="outline" size="sm" type="submit">
-              Log out
-            </Button>
-          </form>
-        </div>
-      </header>
-      <main className="p-6">{children}</main>
-    </div>
+    <SidebarProvider>
+      <AppSidebar user={{ email: user.email ?? undefined }} />
+      <SidebarInset>
+        <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4">
+          <SidebarTrigger className="-ml-1" />
+          <Separator orientation="vertical" className="mr-2 data-[orientation=vertical]:h-4" />
+          <h1 className="text-sm font-medium">Admin Dashboard</h1>
+        </header>
+        <main className="flex-1 p-6">{children}</main>
+      </SidebarInset>
+    </SidebarProvider>
   )
 }
