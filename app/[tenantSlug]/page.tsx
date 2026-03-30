@@ -1,5 +1,11 @@
-import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
+import { getMicrositeData } from '@/lib/queries/microsite'
+import { HeroSection } from '@/components/microsite/hero-section'
+import { AboutSection } from '@/components/microsite/about-section'
+import { TrustSection } from '@/components/microsite/trust-section'
+import { RepresentativesSection } from '@/components/microsite/representatives-section'
+import { PlaceholderSection } from '@/components/microsite/placeholder-section'
+import { MicrositeFooter } from '@/components/microsite/microsite-footer'
 
 interface MicrositePageProps {
   params: Promise<{ tenantSlug: string }>
@@ -7,44 +13,62 @@ interface MicrositePageProps {
 
 export default async function MicrositePage({ params }: MicrositePageProps) {
   const { tenantSlug } = await params
-  const supabase = await createClient()
-
-  // Fetch tenant
-  const { data: tenant } = await supabase
-    .from('tenants')
-    .select('id, name, slug')
-    .eq('slug', tenantSlug)
-    .eq('status', 'active')
-    .single()
+  const tenant = await getMicrositeData(tenantSlug)
 
   if (!tenant) {
     notFound()
   }
 
-  // Fetch business profile if it exists
-  const { data: profile } = await supabase
-    .from('business_profiles')
-    .select('company_name, tagline, event_name, stand_number')
-    .eq('tenant_id', tenant.id)
-    .single()
+  const profile = tenant.business_profiles?.[0]
 
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-6 text-center">
-      <h1 className="text-3xl font-bold">{profile?.company_name || tenant.name}</h1>
-      {profile?.tagline && (
-        <p className="mt-2 text-lg text-gray-600">{profile.tagline}</p>
-      )}
-      {profile?.event_name && (
-        <p className="mt-4 text-sm text-gray-500">
-          Met us at {profile.event_name}
-          {profile.stand_number && `, Stand ${profile.stand_number}`}
-        </p>
-      )}
-      {!profile && (
-        <p className="mt-4 text-gray-400">
+  // No business profile yet -- show setup message
+  if (!profile) {
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-center p-6 text-center">
+        <h1 className="text-2xl font-bold">{tenant.name}</h1>
+        <p className="mt-4 text-muted-foreground">
           This microsite is being set up. Check back soon.
         </p>
+      </main>
+    )
+  }
+
+  // Sort representatives: primary first, then by sort_order
+  const reps = [...(profile.representatives ?? [])].sort((a, b) => {
+    if (a.is_primary !== b.is_primary) {
+      return a.is_primary ? -1 : 1
+    }
+    return a.sort_order - b.sort_order
+  })
+
+  // Filter enabled CTAs, sorted by sort_order, max 4
+  const ctas = (profile.cta_configurations ?? [])
+    .filter((cta) => cta.enabled)
+    .sort((a, b) => a.sort_order - b.sort_order)
+    .slice(0, 4)
+
+  return (
+    <main role="main" className="flex min-h-screen flex-col pb-20 md:pb-0">
+      <HeroSection profile={profile} />
+
+      {/* Sticky CTA bar -- wired in Plan 02 */}
+      {ctas.length > 0 && (
+        <div data-ctas={JSON.stringify(ctas.map((c) => c.type))} className="hidden" />
       )}
-    </div>
+
+      <PlaceholderSection id="products" label="Products" />
+
+      <AboutSection aboutContent={profile.about_content} />
+
+      <TrustSection trustContent={profile.trust_content} />
+
+      <PlaceholderSection id="catalog" label="Catalog" />
+
+      <PlaceholderSection id="lead-capture" label="Get in Touch" />
+
+      <RepresentativesSection reps={reps} tenantSlug={tenantSlug} />
+
+      <MicrositeFooter profile={profile} />
+    </main>
   )
 }
