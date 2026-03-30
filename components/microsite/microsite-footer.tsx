@@ -1,5 +1,6 @@
 import { Calendar, Phone, Mail, Globe } from 'lucide-react'
 import type { BusinessProfile } from '@/lib/queries/microsite'
+import { EventFooter } from '@/components/microsite/event-footer'
 
 interface MicrositeFooterProps {
   profile: BusinessProfile
@@ -26,8 +27,8 @@ export function MicrositeFooter({ profile }: MicrositeFooterProps) {
           </p>
         )}
 
-        {/* Visit date placeholder -- Plan 02 will add client-side EventFooter component */}
-        <span id="visit-date" />
+        {/* Client-side visit date */}
+        <EventFooter />
 
         {/* Business contact details (non-interactive text) */}
         <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs">

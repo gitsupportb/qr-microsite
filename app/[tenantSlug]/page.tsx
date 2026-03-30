@@ -6,6 +6,9 @@ import { TrustSection } from '@/components/microsite/trust-section'
 import { RepresentativesSection } from '@/components/microsite/representatives-section'
 import { PlaceholderSection } from '@/components/microsite/placeholder-section'
 import { MicrositeFooter } from '@/components/microsite/microsite-footer'
+import { StickyCtaBar } from '@/components/microsite/sticky-cta-bar'
+import { CommunicationButtons } from '@/components/microsite/communication-buttons'
+import { ShareButton } from '@/components/microsite/share-button'
 
 interface MicrositePageProps {
   params: Promise<{ tenantSlug: string }>
@@ -51,10 +54,7 @@ export default async function MicrositePage({ params }: MicrositePageProps) {
     <main role="main" className="flex min-h-screen flex-col pb-20 md:pb-0">
       <HeroSection profile={profile} />
 
-      {/* Sticky CTA bar -- wired in Plan 02 */}
-      {ctas.length > 0 && (
-        <div data-ctas={JSON.stringify(ctas.map((c) => c.type))} className="hidden" />
-      )}
+      <CommunicationButtons profile={profile} />
 
       <PlaceholderSection id="products" label="Products" />
 
@@ -68,7 +68,24 @@ export default async function MicrositePage({ params }: MicrositePageProps) {
 
       <RepresentativesSection reps={reps} tenantSlug={tenantSlug} />
 
+      <ShareButton
+        companyName={profile.company_name}
+        tagline={profile.tagline}
+        tenantSlug={tenantSlug}
+      />
+
       <MicrositeFooter profile={profile} />
+
+      <StickyCtaBar
+        ctas={ctas.map((c) => ({
+          type: c.type,
+          label: c.label,
+          destination: c.destination,
+        }))}
+        tenantSlug={tenantSlug}
+        companyName={profile.company_name}
+        tagline={profile.tagline}
+      />
     </main>
   )
 }
