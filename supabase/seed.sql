@@ -1,0 +1,7 @@
+-- Seed data for development
+-- To create a test tenant, sign up via the app UI.
+-- The handle_new_user() trigger will auto-create the tenant.
+-- After signup, you can insert test data via:
+--
+-- INSERT INTO public.business_profiles (tenant_id, company_name, tagline)
+-- VALUES ('<your-tenant-id>', 'Demo Company', 'Innovation in action');
