@@ -699,6 +699,13 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      set_primary_representative: {
+        Args: {
+          p_rep_id: string
+          p_business_profile_id: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
