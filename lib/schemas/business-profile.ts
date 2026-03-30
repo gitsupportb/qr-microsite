@@ -85,4 +85,5 @@ export const businessProfileSchema = z.object({
 })
 
 export type BusinessProfileInput = z.infer<typeof businessProfileSchema>
+export type BusinessProfileFormValues = z.input<typeof businessProfileSchema>
 export type AboutContent = z.infer<typeof aboutContentSchema>
