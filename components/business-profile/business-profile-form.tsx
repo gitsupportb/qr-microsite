@@ -7,6 +7,7 @@ import {
   type BusinessProfileInput,
   type BusinessProfileFormValues,
   type AboutContent,
+  type CommChannelsEnabled,
 } from '@/lib/schemas/business-profile'
 import { upsertBusinessProfile } from '@/lib/actions/business-profile'
 import { useState, useTransition } from 'react'
@@ -23,6 +24,7 @@ import {
 } from '@/components/ui/card'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { Separator } from '@/components/ui/separator'
+import { Switch } from '@/components/ui/switch'
 import { ImageUpload } from '@/components/business-profile/image-upload'
 import { TagInput } from '@/components/business-profile/tag-input'
 import { toast } from 'sonner'
@@ -67,6 +69,9 @@ export function BusinessProfileForm({
           hero_image_url: initialData.hero_image_url ?? '',
           about_content:
             (initialData.about_content as AboutContent) ?? undefined,
+          comm_channels_enabled:
+            (initialData.comm_channels_enabled as CommChannelsEnabled) ??
+            undefined,
         }
       : {
           company_name: '',
@@ -107,6 +112,7 @@ export function BusinessProfileForm({
               <TabsTrigger value={0}>Company</TabsTrigger>
               <TabsTrigger value={1}>Event</TabsTrigger>
               <TabsTrigger value={2}>Content</TabsTrigger>
+              <TabsTrigger value={3}>Channels</TabsTrigger>
             </TabsList>
 
             {/* Tab 1: Company */}
@@ -421,6 +427,141 @@ export function BusinessProfileForm({
                   />
                 </div>
               </div>
+            </TabsContent>
+
+            {/* Tab 4: Channels */}
+            <TabsContent value={3} className="space-y-4 pt-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">
+                    Communication Buttons
+                  </CardTitle>
+                  <CardDescription>
+                    Control which contact buttons appear on your public
+                    microsite. Buttons only show when the corresponding contact
+                    field is filled in.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {/* Call */}
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label className="text-sm font-medium">Call</Label>
+                      <p className="text-xs text-muted-foreground">
+                        {watch('phone') || 'No phone number set -- add one in the Company tab'}
+                      </p>
+                    </div>
+                    <Controller
+                      name="comm_channels_enabled.call"
+                      control={control}
+                      render={({ field }) => (
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          disabled={!watch('phone')}
+                          aria-label="Toggle call button visibility"
+                        />
+                      )}
+                    />
+                  </div>
+
+                  <Separator />
+
+                  {/* Email */}
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label className="text-sm font-medium">Email</Label>
+                      <p className="text-xs text-muted-foreground">
+                        {watch('email') || 'No email set -- add one in the Company tab'}
+                      </p>
+                    </div>
+                    <Controller
+                      name="comm_channels_enabled.email"
+                      control={control}
+                      render={({ field }) => (
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          disabled={!watch('email')}
+                          aria-label="Toggle email button visibility"
+                        />
+                      )}
+                    />
+                  </div>
+
+                  <Separator />
+
+                  {/* WhatsApp */}
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label className="text-sm font-medium">WhatsApp</Label>
+                      <p className="text-xs text-muted-foreground">
+                        {watch('phone') || 'No phone number set -- add one in the Company tab'}
+                      </p>
+                    </div>
+                    <Controller
+                      name="comm_channels_enabled.whatsapp"
+                      control={control}
+                      render={({ field }) => (
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          disabled={!watch('phone')}
+                          aria-label="Toggle WhatsApp button visibility"
+                        />
+                      )}
+                    />
+                  </div>
+
+                  <Separator />
+
+                  {/* Website */}
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label className="text-sm font-medium">Website</Label>
+                      <p className="text-xs text-muted-foreground">
+                        {watch('website') || 'No website set -- add one in the Company tab'}
+                      </p>
+                    </div>
+                    <Controller
+                      name="comm_channels_enabled.website"
+                      control={control}
+                      render={({ field }) => (
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          disabled={!watch('website')}
+                          aria-label="Toggle website button visibility"
+                        />
+                      )}
+                    />
+                  </div>
+
+                  <Separator />
+
+                  {/* Location */}
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label className="text-sm font-medium">Location</Label>
+                      <p className="text-xs text-muted-foreground">
+                        {watch('address') || 'No address set -- add one in the Company tab'}
+                      </p>
+                    </div>
+                    <Controller
+                      name="comm_channels_enabled.maps"
+                      control={control}
+                      render={({ field }) => (
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          disabled={!watch('address')}
+                          aria-label="Toggle location button visibility"
+                        />
+                      )}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
             </TabsContent>
           </Tabs>
 

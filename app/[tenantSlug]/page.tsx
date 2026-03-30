@@ -54,7 +54,14 @@ export default async function MicrositePage({ params }: MicrositePageProps) {
     <main role="main" className="flex min-h-screen flex-col pb-20 md:pb-0">
       <HeroSection profile={profile} />
 
-      <CommunicationButtons profile={profile} />
+      <CommunicationButtons
+        profile={profile}
+        channelsConfig={
+          profile.comm_channels_enabled as
+            | Record<string, boolean>
+            | undefined
+        }
+      />
 
       <PlaceholderSection id="products" label="Products" />
 

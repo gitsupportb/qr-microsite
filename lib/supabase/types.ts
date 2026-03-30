@@ -102,6 +102,7 @@ export type Database = {
           hero_image_url: string | null
           about_content: Json
           trust_content: Json
+          comm_channels_enabled: Json
           created_at: string
           updated_at: string
         }
@@ -122,6 +123,7 @@ export type Database = {
           hero_image_url?: string | null
           about_content?: Json
           trust_content?: Json
+          comm_channels_enabled?: Json
           created_at?: string
           updated_at?: string
         }
@@ -142,6 +144,7 @@ export type Database = {
           hero_image_url?: string | null
           about_content?: Json
           trust_content?: Json
+          comm_channels_enabled?: Json
           created_at?: string
           updated_at?: string
         }

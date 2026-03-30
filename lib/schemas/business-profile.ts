@@ -37,6 +37,17 @@ export const aboutContentSchema = z.object({
   })),
 })
 
+// Schema for communication channel visibility toggles
+export const commChannelsEnabledSchema = z.object({
+  call: z.boolean().default(true),
+  email: z.boolean().default(true),
+  whatsapp: z.boolean().default(true),
+  website: z.boolean().default(true),
+  maps: z.boolean().default(true),
+})
+
+export type CommChannelsEnabled = z.infer<typeof commChannelsEnabledSchema>
+
 export const businessProfileSchema = z.object({
   company_name: z
     .string()
@@ -81,6 +92,13 @@ export const businessProfileSchema = z.object({
     sectors_served: { title: 'Sectors Served', items: [] },
     certifications: { title: 'Certifications', items: [] },
     use_cases: { title: 'Use Cases', items: [] },
+  })),
+  comm_channels_enabled: commChannelsEnabledSchema.default(() => ({
+    call: true,
+    email: true,
+    whatsapp: true,
+    website: true,
+    maps: true,
   })),
 })
 

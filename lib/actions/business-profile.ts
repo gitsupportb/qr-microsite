@@ -55,6 +55,7 @@ export async function upsertBusinessProfile(formData: BusinessProfileInput) {
     logo_url: parsed.data.logo_url || null,
     hero_image_url: parsed.data.hero_image_url || null,
     about_content: parsed.data.about_content,
+    comm_channels_enabled: parsed.data.comm_channels_enabled,
   }
 
   const { error } = await supabase

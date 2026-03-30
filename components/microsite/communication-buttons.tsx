@@ -9,6 +9,13 @@ interface CommunicationButtonsProps {
     BusinessProfile,
     'phone' | 'email' | 'website' | 'address' | 'representatives'
   >
+  channelsConfig?: {
+    call?: boolean
+    email?: boolean
+    whatsapp?: boolean
+    website?: boolean
+    maps?: boolean
+  }
 }
 
 /**
@@ -29,10 +36,13 @@ interface CommChannel {
   external?: boolean
 }
 
-export function CommunicationButtons({ profile }: CommunicationButtonsProps) {
+export function CommunicationButtons({
+  profile,
+  channelsConfig,
+}: CommunicationButtonsProps) {
   const channels: CommChannel[] = []
 
-  if (profile.phone) {
+  if (profile.phone && channelsConfig?.call !== false) {
     channels.push({
       key: 'call',
       label: 'Call',
@@ -41,7 +51,7 @@ export function CommunicationButtons({ profile }: CommunicationButtonsProps) {
     })
   }
 
-  if (profile.email) {
+  if (profile.email && channelsConfig?.email !== false) {
     channels.push({
       key: 'email',
       label: 'Email',
@@ -54,7 +64,7 @@ export function CommunicationButtons({ profile }: CommunicationButtonsProps) {
   const whatsappNumber =
     profile.representatives?.find((r) => r.whatsapp)?.whatsapp ??
     profile.phone
-  if (whatsappNumber) {
+  if (whatsappNumber && channelsConfig?.whatsapp !== false) {
     channels.push({
       key: 'whatsapp',
       label: 'WhatsApp',
@@ -64,7 +74,7 @@ export function CommunicationButtons({ profile }: CommunicationButtonsProps) {
     })
   }
 
-  if (profile.website) {
+  if (profile.website && channelsConfig?.website !== false) {
     channels.push({
       key: 'website',
       label: 'Website',
@@ -74,7 +84,7 @@ export function CommunicationButtons({ profile }: CommunicationButtonsProps) {
     })
   }
 
-  if (profile.address) {
+  if (profile.address && channelsConfig?.maps !== false) {
     channels.push({
       key: 'maps',
       label: 'Location',

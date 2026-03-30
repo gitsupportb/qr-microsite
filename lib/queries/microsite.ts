@@ -39,6 +39,7 @@ export const getMicrositeData = cache(
           id, company_name, tagline, description_short, description_long,
           phone, email, website, address, event_name, stand_number,
           logo_url, hero_image_url, about_content, trust_content,
+          comm_channels_enabled,
           representatives(
             id, name, title, email, phone, whatsapp, image_url,
             is_primary, sort_order
