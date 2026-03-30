@@ -4,7 +4,7 @@ const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 
 export async function uploadImage(
   tenantId: string,
-  category: 'logos' | 'hero',
+  category: 'logos' | 'hero' | 'representatives',
   file: File
 ): Promise<{ publicUrl: string } | { error: string }> {
   // Client-side MIME type validation
