@@ -1,5 +1,5 @@
 import { Download } from 'lucide-react'
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { DocumentLink } from '@/components/microsite/document-link'
 import type { Database } from '@/lib/supabase/types'
 
@@ -35,20 +35,20 @@ export async function DocumentSection({
   tenantId,
   businessProfileId,
 }: DocumentSectionProps) {
-  // Show all non-private documents
   const visibleDocs = documents.filter((doc) => doc.visibility !== 'private')
 
   if (visibleDocs.length === 0) return null
 
-  const supabase = await createClient()
+  // Use service role client for signed URLs — no JWT expiry issues
+  const supabase = createAdminClient()
 
-  // Generate signed URLs for ALL visible documents (no gating)
   const docsWithUrls: DocumentWithUrl[] = await Promise.all(
     visibleDocs.map(async (doc) => {
       if (doc.storage_path) {
+        // 7-day signed URL using service role (no JWT dependency)
         const { data } = await supabase.storage
           .from('private-documents')
-          .createSignedUrl(doc.storage_path, 60 * 60)
+          .createSignedUrl(doc.storage_path, 60 * 60 * 24 * 7)
         return { ...doc, downloadUrl: data?.signedUrl ?? doc.file_url }
       }
       return { ...doc, downloadUrl: doc.file_url }
