@@ -23,9 +23,19 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
+import { Separator } from '@/components/ui/separator'
 import { useEffect, useTransition } from 'react'
 import { toast } from 'sonner'
 import type { Database } from '@/lib/supabase/types'
+
+const CTA_TEMPLATES = [
+  { type: 'save_contact' as const, label: 'Save Contact' },
+  { type: 'whatsapp' as const, label: 'Chat on WhatsApp' },
+  { type: 'call' as const, label: 'Call Us' },
+  { type: 'website' as const, label: 'Visit Website' },
+  { type: 'get_catalog' as const, label: 'Get Catalog' },
+  { type: 'book_meeting' as const, label: 'Book Meeting' },
+] as const
 
 type CtaConfigurationRow =
   Database['public']['Tables']['cta_configurations']['Row']
@@ -119,6 +129,35 @@ export function CtaConfigForm({
               : 'Configure a new action button for your sticky CTA bar.'}
           </DialogDescription>
         </DialogHeader>
+
+        {!isEditMode && (
+          <div className="space-y-2">
+            <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+              Quick Add
+            </Label>
+            <div className="flex flex-wrap gap-2">
+              {CTA_TEMPLATES.map((template) => (
+                <Button
+                  key={template.type}
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    reset({
+                      type: template.type,
+                      label: template.label,
+                      destination: '',
+                      enabled: true,
+                    })
+                  }}
+                >
+                  {template.label}
+                </Button>
+              ))}
+            </div>
+            <Separator />
+          </div>
+        )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">

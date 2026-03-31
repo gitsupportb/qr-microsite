@@ -1,10 +1,13 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { Eye, Users, Download, FormInput } from 'lucide-react'
+import { useTransition } from 'react'
+import { Eye, Users, Download, FormInput, Trash2 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { AnalyticsChart } from '@/components/admin/analytics-chart'
+import { resetAnalytics } from '@/lib/actions/analytics'
+import { toast } from 'sonner'
 import type {
   AnalyticsSummary,
   TimeSeriesPoint,
@@ -27,9 +30,29 @@ export function AnalyticsDashboard({
   initialDays,
 }: AnalyticsDashboardProps) {
   const router = useRouter()
+  const [isResetting, startResetTransition] = useTransition()
 
   function handleDaysChange(days: number) {
     router.push(`/admin/analytics?days=${days}`)
+  }
+
+  function handleResetAnalytics() {
+    if (
+      !window.confirm(
+        'Are you sure you want to reset all analytics data? This action cannot be undone.'
+      )
+    ) {
+      return
+    }
+    startResetTransition(async () => {
+      const result = await resetAnalytics()
+      if (result.error) {
+        toast.error(result.error)
+      } else {
+        toast.success('Analytics data has been reset')
+        router.refresh()
+      }
+    })
   }
 
   return (
@@ -41,6 +64,16 @@ export function AnalyticsDashboard({
             Track visitor engagement on your microsite
           </p>
         </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleResetAnalytics}
+          disabled={isResetting}
+          className="text-destructive hover:text-destructive"
+        >
+          <Trash2 className="mr-2 h-4 w-4" />
+          {isResetting ? 'Resetting...' : 'Reset Analytics'}
+        </Button>
       </div>
 
       {/* Metric Cards */}

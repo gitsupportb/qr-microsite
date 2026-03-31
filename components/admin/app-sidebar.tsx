@@ -12,6 +12,7 @@ import {
   QrCode,
   BarChart3,
   Palette,
+  User,
   LogOut,
 } from 'lucide-react'
 import { logoutAction } from '@/lib/actions/auth'
@@ -39,6 +40,7 @@ const navItems = [
   { label: 'QR Codes', href: '/admin/qr-codes', icon: QrCode, disabled: false },
   { label: 'Analytics', href: '/admin/analytics', icon: BarChart3, disabled: false },
   { label: 'Theme', href: '/admin/theme', icon: Palette, disabled: false },
+  { label: 'Profile', href: '/admin/profile', icon: User, disabled: false },
 ]
 
 export function AppSidebar({ user }: { user: { email?: string } }) {

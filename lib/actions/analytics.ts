@@ -25,6 +25,21 @@ async function getAuthenticatedTenant() {
   return { tenantId, supabase }
 }
 
+// ---------- Reset Analytics ----------
+
+export async function resetAnalytics(): Promise<{ success?: boolean; error?: string }> {
+  const { tenantId, supabase } = await getAuthenticatedTenant()
+
+  const { error } = await supabase
+    .from('analytics_events')
+    .delete()
+    .eq('tenant_id', tenantId)
+
+  if (error) return { error: error.message }
+
+  return { success: true }
+}
+
 // ---------- Summary Metrics ----------
 
 export interface AnalyticsSummary {
