@@ -14,6 +14,7 @@ import { MicrositeFooter } from '@/components/microsite/microsite-footer'
 import { StickyCtaBar } from '@/components/microsite/sticky-cta-bar'
 import { CommunicationButtons } from '@/components/microsite/communication-buttons'
 import { ShareButton } from '@/components/microsite/share-button'
+import { PageViewTracker } from '@/components/microsite/page-view-tracker'
 
 interface MicrositePageProps {
   params: Promise<{ tenantSlug: string }>
@@ -85,15 +86,19 @@ export default async function MicrositePage({ params }: MicrositePageProps) {
             | Record<string, boolean>
             | undefined
         }
+        tenantId={tenant.id}
+        businessProfileId={profile.id}
       />
     ),
-    products: <ProductShowcase products={profile.products ?? []} />,
+    products: <ProductShowcase products={profile.products ?? []} tenantId={tenant.id} businessProfileId={profile.id} />,
     about: <AboutSection aboutContent={profile.about_content} />,
     trust: <TrustSection trustContent={profile.trust_content} />,
     documents: (
       <DocumentSection
         documents={profile.documents ?? []}
         tenantSlug={tenantSlug}
+        tenantId={tenant.id}
+        businessProfileId={profile.id}
       />
     ),
     'lead-capture': (
@@ -113,6 +118,8 @@ export default async function MicrositePage({ params }: MicrositePageProps) {
         companyName={profile.company_name}
         tagline={profile.tagline}
         tenantSlug={tenantSlug}
+        tenantId={tenant.id}
+        businessProfileId={profile.id}
       />
     ),
     footer: <MicrositeFooter profile={profile} />,
@@ -134,6 +141,8 @@ export default async function MicrositePage({ params }: MicrositePageProps) {
         tenantSlug={tenantSlug}
         companyName={profile.company_name}
         tagline={profile.tagline}
+        tenantId={tenant.id}
+        businessProfileId={profile.id}
       />
 
       <LeadCaptureSheet
@@ -142,6 +151,12 @@ export default async function MicrositePage({ params }: MicrositePageProps) {
         tenantSlug={tenantSlug}
         eventName={profile.event_name}
         categories={categories}
+      />
+
+      <PageViewTracker
+        tenantId={tenant.id}
+        businessProfileId={profile.id}
+        pageSlug={tenantSlug}
       />
     </main>
   )

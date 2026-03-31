@@ -11,11 +11,14 @@ import {
   CardTitle,
   CardDescription,
 } from '@/components/ui/card'
+import { trackEvent } from '@/lib/analytics'
 import type { ProductWithCategory } from '@/lib/queries/microsite'
 
 interface ProductFilterProps {
   products: ProductWithCategory[]
   categories: Array<{ id: string; name: string; slug: string }>
+  tenantId?: string
+  businessProfileId?: string
 }
 
 /**
@@ -23,7 +26,7 @@ interface ProductFilterProps {
  * Receives pre-filtered (visible only) and pre-sorted (featured first) products
  * from the ProductShowcase Server Component parent.
  */
-export function ProductFilter({ products, categories }: ProductFilterProps) {
+export function ProductFilter({ products, categories, tenantId, businessProfileId }: ProductFilterProps) {
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
 
   // Filter products by selected category (null = show all)
@@ -85,6 +88,11 @@ export function ProductFilter({ products, categories }: ProductFilterProps) {
           <Card
             key={product.id}
             className="transition-shadow hover:shadow-md"
+            onClick={() => {
+              if (tenantId) {
+                trackEvent('product_click', tenantId, { businessProfileId, metadata: { product_id: product.id, product_title: product.title } })
+              }
+            }}
           >
             {/* Product image */}
             <div className="relative aspect-[16/9] w-full overflow-hidden rounded-t-xl bg-muted">

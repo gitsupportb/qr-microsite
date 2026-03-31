@@ -2,6 +2,7 @@
 
 import { Phone, Mail, MessageCircle, Globe, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { trackEvent } from '@/lib/analytics'
 import type { BusinessProfile } from '@/lib/queries/microsite'
 
 interface CommunicationButtonsProps {
@@ -16,6 +17,8 @@ interface CommunicationButtonsProps {
     website?: boolean
     maps?: boolean
   }
+  tenantId?: string
+  businessProfileId?: string
 }
 
 /**
@@ -39,6 +42,8 @@ interface CommChannel {
 export function CommunicationButtons({
   profile,
   channelsConfig,
+  tenantId,
+  businessProfileId,
 }: CommunicationButtonsProps) {
   const channels: CommChannel[] = []
 
@@ -111,6 +116,10 @@ export function CommunicationButtons({
               className="flex h-11 items-center gap-2 text-sm"
               aria-label={ch.label}
               onClick={() => {
+                if (tenantId) {
+                  const eventType = ch.key === 'whatsapp' ? 'whatsapp_click' : 'comm_button_click' as const
+                  trackEvent(eventType, tenantId, { businessProfileId, metadata: { channel: ch.key } })
+                }
                 if (ch.external) {
                   window.open(ch.href, '_blank', 'noopener')
                 } else {

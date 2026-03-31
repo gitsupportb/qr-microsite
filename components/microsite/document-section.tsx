@@ -2,6 +2,7 @@ import { FileText, Download, Lock } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { createClient } from '@/lib/supabase/server'
+import { DocumentLink } from '@/components/microsite/document-link'
 import type { Database } from '@/lib/supabase/types'
 
 type DocumentRow = Database['public']['Tables']['documents']['Row']
@@ -9,6 +10,8 @@ type DocumentRow = Database['public']['Tables']['documents']['Row']
 interface DocumentSectionProps {
   documents: DocumentRow[]
   tenantSlug: string
+  tenantId?: string
+  businessProfileId?: string
 }
 
 /** Map document type to a tailwind color class for the icon circle */
@@ -50,6 +53,8 @@ type DocumentWithUrl = DocumentRow & { downloadUrl: string | null }
 export async function DocumentSection({
   documents,
   tenantSlug,
+  tenantId,
+  businessProfileId,
 }: DocumentSectionProps) {
   // Filter: only public and gated documents visible on the public microsite
   const visibleDocs = documents.filter(
@@ -110,16 +115,31 @@ export async function DocumentSection({
               {/* Action button */}
               <div className="mt-3">
                 {doc.visibility === 'public' && doc.downloadUrl ? (
-                  <a
-                    href={doc.downloadUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex h-9 min-w-[44px] items-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/80"
-                    aria-label={`Download ${doc.title}`}
-                  >
-                    <Download className="size-4" />
-                    <span>Download PDF</span>
-                  </a>
+                  tenantId && businessProfileId ? (
+                    <DocumentLink
+                      href={doc.downloadUrl}
+                      tenantId={tenantId}
+                      businessProfileId={businessProfileId}
+                      documentId={doc.id}
+                      documentTitle={doc.title}
+                      className="inline-flex h-9 min-w-[44px] items-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/80"
+                      ariaLabel={`Download ${doc.title}`}
+                    >
+                      <Download className="size-4" />
+                      <span>Download PDF</span>
+                    </DocumentLink>
+                  ) : (
+                    <a
+                      href={doc.downloadUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex h-9 min-w-[44px] items-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/80"
+                      aria-label={`Download ${doc.title}`}
+                    >
+                      <Download className="size-4" />
+                      <span>Download PDF</span>
+                    </a>
+                  )
                 ) : (
                   <a
                     href="#lead-capture"

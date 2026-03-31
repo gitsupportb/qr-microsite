@@ -3,6 +3,8 @@ import { ProductFilter } from '@/components/microsite/product-filter'
 
 interface ProductShowcaseProps {
   products: ProductWithCategory[]
+  tenantId?: string
+  businessProfileId?: string
 }
 
 /**
@@ -11,7 +13,7 @@ interface ProductShowcaseProps {
  * extracts unique categories, and passes data to the client filter component.
  * Returns null when no visible products exist (hides section entirely).
  */
-export function ProductShowcase({ products }: ProductShowcaseProps) {
+export function ProductShowcase({ products, tenantId, businessProfileId }: ProductShowcaseProps) {
   // Filter to visible products only and sort: featured first, then by sort_order
   const visibleProducts = products
     .filter((p) => p.visible)
@@ -43,7 +45,7 @@ export function ProductShowcase({ products }: ProductShowcaseProps) {
   return (
     <section id="products" className="px-4 py-8 sm:px-6" aria-label="Products">
       <h2 className="mb-6 text-xl font-bold sm:text-2xl">Our Products</h2>
-      <ProductFilter products={visibleProducts} categories={categories} />
+      <ProductFilter products={visibleProducts} categories={categories} tenantId={tenantId} businessProfileId={businessProfileId} />
     </section>
   )
 }

@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
+import { trackEvent } from '@/lib/analytics'
 import type { Database } from '@/lib/supabase/types'
 
 type CtaConfigurationRow =
@@ -28,6 +29,8 @@ interface StickyCtaBarProps {
   tenantSlug: string
   companyName: string
   tagline: string | null
+  tenantId: string
+  businessProfileId: string
 }
 
 const CTA_ICON_MAP: Record<CtaType, typeof Download> = {
@@ -59,15 +62,19 @@ export function StickyCtaBar({
   tenantSlug,
   companyName,
   tagline,
+  tenantId,
+  businessProfileId,
 }: StickyCtaBarProps) {
   const handleCtaAction = useCallback(
     async (type: CtaType, destination: string | null) => {
       switch (type) {
         case 'save_contact':
+          trackEvent('save_contact', tenantId, { businessProfileId, pageSlug: tenantSlug, metadata: { cta_label: 'Save Contact' } })
           window.location.href = `/api/vcard/business/${tenantSlug}`
           break
 
         case 'whatsapp': {
+          trackEvent('whatsapp_click', tenantId, { businessProfileId, pageSlug: tenantSlug })
           const waPhone = destination ? cleanPhone(destination) : ''
           if (waPhone) {
             window.open(`https://wa.me/${waPhone}`, '_blank', 'noopener')
@@ -76,12 +83,14 @@ export function StickyCtaBar({
         }
 
         case 'call':
+          trackEvent('cta_click', tenantId, { businessProfileId, pageSlug: tenantSlug, metadata: { cta_type: type, cta_label: 'Call' } })
           if (destination) {
             window.open(`tel:${destination}`)
           }
           break
 
         case 'email':
+          trackEvent('cta_click', tenantId, { businessProfileId, pageSlug: tenantSlug, metadata: { cta_type: type, cta_label: 'Email' } })
           if (destination) {
             window.open(`mailto:${destination}`)
           }
@@ -90,12 +99,14 @@ export function StickyCtaBar({
         case 'website':
         case 'maps':
         case 'book_meeting':
+          trackEvent('cta_click', tenantId, { businessProfileId, pageSlug: tenantSlug, metadata: { cta_type: type } })
           if (destination) {
             window.open(destination, '_blank', 'noopener')
           }
           break
 
         case 'share': {
+          trackEvent('share_click', tenantId, { businessProfileId, pageSlug: tenantSlug, metadata: { method: 'cta_bar' } })
           const shareData = {
             title: companyName,
             text: tagline || `Check out ${companyName}`,
@@ -127,25 +138,28 @@ export function StickyCtaBar({
         }
 
         case 'view_products':
+          trackEvent('cta_click', tenantId, { businessProfileId, pageSlug: tenantSlug, metadata: { cta_type: type } })
           document
             .getElementById('products')
             ?.scrollIntoView({ behavior: 'smooth' })
           break
 
         case 'get_catalog':
+          trackEvent('cta_click', tenantId, { businessProfileId, pageSlug: tenantSlug, metadata: { cta_type: type } })
           document
             .getElementById('catalog')
             ?.scrollIntoView({ behavior: 'smooth' })
           break
 
         case 'request_quote':
+          trackEvent('cta_click', tenantId, { businessProfileId, pageSlug: tenantSlug, metadata: { cta_type: type } })
           document
             .getElementById('lead-capture')
             ?.scrollIntoView({ behavior: 'smooth' })
           break
       }
     },
-    [tenantSlug, companyName, tagline]
+    [tenantSlug, companyName, tagline, tenantId, businessProfileId]
   )
 
   if (ctas.length === 0) {

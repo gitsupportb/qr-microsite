@@ -4,16 +4,22 @@ import { useEffect, useState } from 'react'
 import { Share2, MessageCircle, Copy } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
+import { trackEvent } from '@/lib/analytics'
 
 interface ShareButtonProps {
   companyName: string
   tagline: string | null
   tenantSlug: string
+  tenantId?: string
+  businessProfileId?: string
 }
 
 export function ShareButton({
   companyName,
   tagline,
+  tenantSlug,
+  tenantId,
+  businessProfileId,
 }: ShareButtonProps) {
   const [canNativeShare, setCanNativeShare] = useState(false)
 
@@ -27,6 +33,9 @@ export function ShareButton({
     typeof window !== 'undefined' ? window.location.href : ''
 
   const handleNativeShare = async () => {
+    if (tenantId) {
+      trackEvent('share_click', tenantId, { businessProfileId, pageSlug: tenantSlug, metadata: { method: 'native_share' } })
+    }
     try {
       await navigator.share({
         title: companyName,
@@ -44,6 +53,9 @@ export function ShareButton({
   }
 
   const handleWhatsAppShare = () => {
+    if (tenantId) {
+      trackEvent('share_click', tenantId, { businessProfileId, pageSlug: tenantSlug, metadata: { method: 'whatsapp' } })
+    }
     const text = `Check out ${companyName} - ${getPageUrl()}`
     window.open(
       `https://wa.me/?text=${encodeURIComponent(text)}`,
@@ -53,6 +65,9 @@ export function ShareButton({
   }
 
   const handleCopyLink = async () => {
+    if (tenantId) {
+      trackEvent('share_click', tenantId, { businessProfileId, pageSlug: tenantSlug, metadata: { method: 'clipboard' } })
+    }
     try {
       await navigator.clipboard.writeText(getPageUrl())
       toast.success('Link copied to clipboard')

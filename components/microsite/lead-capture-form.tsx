@@ -7,6 +7,7 @@ import { z } from 'zod'
 import { toast } from 'sonner'
 import { Loader2, CheckCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { trackEvent } from '@/lib/analytics'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
@@ -99,6 +100,7 @@ export function LeadCaptureForm({
 
       if (response.status === 201) {
         setSubmitted(true)
+        trackEvent('form_submit', tenantId, { businessProfileId, pageSlug: tenantSlug, metadata: { form_location: formLocation } })
         // Call onSuccess after a 2-second delay (for sheet to close)
         if (onSuccess) {
           setTimeout(onSuccess, 2000)
