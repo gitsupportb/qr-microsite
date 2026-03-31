@@ -1,5 +1,7 @@
+import { Fragment } from 'react'
 import { notFound } from 'next/navigation'
 import { getMicrositeData } from '@/lib/queries/microsite'
+import { themeConfigSchema } from '@/lib/schemas/theme'
 import { HeroSection } from '@/components/microsite/hero-section'
 import { AboutSection } from '@/components/microsite/about-section'
 import { TrustSection } from '@/components/microsite/trust-section'
@@ -65,10 +67,17 @@ export default async function MicrositePage({ params }: MicrositePageProps) {
     ).values(),
   ]
 
-  return (
-    <main role="main" className="flex min-h-screen flex-col pb-20 md:pb-0">
-      <HeroSection profile={profile} />
+  // Extract section order from theme config
+  const themeRow = tenant.theme_configurations?.[0]
+  const themeResult = themeConfigSchema.safeParse(themeRow?.tokens_json)
+  const sectionOrder = themeResult.success
+    ? themeResult.data.sectionOrder
+    : themeConfigSchema.parse({}).sectionOrder
 
+  // Map section IDs to their JSX components
+  const sectionMap: Record<string, React.ReactNode> = {
+    hero: <HeroSection profile={profile} />,
+    communication: (
       <CommunicationButtons
         profile={profile}
         channelsConfig={
@@ -77,18 +86,17 @@ export default async function MicrositePage({ params }: MicrositePageProps) {
             | undefined
         }
       />
-
-      <ProductShowcase products={profile.products ?? []} />
-
-      <AboutSection aboutContent={profile.about_content} />
-
-      <TrustSection trustContent={profile.trust_content} />
-
+    ),
+    products: <ProductShowcase products={profile.products ?? []} />,
+    about: <AboutSection aboutContent={profile.about_content} />,
+    trust: <TrustSection trustContent={profile.trust_content} />,
+    documents: (
       <DocumentSection
         documents={profile.documents ?? []}
         tenantSlug={tenantSlug}
       />
-
+    ),
+    'lead-capture': (
       <LeadCaptureSection
         tenantId={tenant.id}
         businessProfileId={profile.id}
@@ -96,17 +104,27 @@ export default async function MicrositePage({ params }: MicrositePageProps) {
         eventName={profile.event_name}
         categories={categories}
       />
-
+    ),
+    representatives: (
       <RepresentativesSection reps={reps} tenantSlug={tenantSlug} />
-
+    ),
+    share: (
       <ShareButton
         companyName={profile.company_name}
         tagline={profile.tagline}
         tenantSlug={tenantSlug}
       />
+    ),
+    footer: <MicrositeFooter profile={profile} />,
+  }
 
-      <MicrositeFooter profile={profile} />
+  return (
+    <main role="main" className="flex min-h-screen flex-col pb-20 md:pb-0">
+      {sectionOrder.map((sectionId) => (
+        <Fragment key={sectionId}>{sectionMap[sectionId]}</Fragment>
+      ))}
 
+      {/* Fixed/overlay elements -- always rendered regardless of section order */}
       <StickyCtaBar
         ctas={ctas.map((c) => ({
           type: c.type,

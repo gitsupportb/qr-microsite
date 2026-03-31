@@ -1,10 +1,38 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getMicrositeData } from '@/lib/queries/microsite'
+import { themeConfigSchema, type ThemeTokens } from '@/lib/schemas/theme'
 
 interface TenantLayoutProps {
   children: React.ReactNode
   params: Promise<{ tenantSlug: string }>
+}
+
+/**
+ * Convert theme tokens to CSS custom property overrides.
+ * These override the Tailwind v4 variables defined in globals.css.
+ * Hex values work in modern browsers -- the browser coerces between
+ * color spaces (hex -> oklch) when resolving var() references.
+ */
+function buildThemeStyle(tokens: ThemeTokens): React.CSSProperties {
+  return {
+    '--primary': tokens.primaryColor,
+    '--primary-foreground': tokens.primaryForeground,
+    '--accent': tokens.accentColor,
+    '--accent-foreground': tokens.accentForeground,
+    '--background': tokens.backgroundColor,
+    '--foreground': tokens.foregroundColor,
+    '--radius': tokens.borderRadius,
+    // Derived variables for visual consistency
+    '--card': tokens.backgroundColor,
+    '--card-foreground': tokens.foregroundColor,
+    '--muted': tokens.backgroundColor,
+    '--muted-foreground': tokens.foregroundColor,
+    '--secondary': tokens.accentColor,
+    '--secondary-foreground': tokens.accentForeground,
+    '--popover': tokens.backgroundColor,
+    '--popover-foreground': tokens.foregroundColor,
+  } as React.CSSProperties
 }
 
 export default async function TenantLayout({ children, params }: TenantLayoutProps) {
@@ -15,8 +43,28 @@ export default async function TenantLayout({ children, params }: TenantLayoutPro
     notFound()
   }
 
+  // Extract theme config from the joined theme_configurations row
+  const themeRow = tenant.theme_configurations?.[0]
+  const themeResult = themeConfigSchema.safeParse(themeRow?.tokens_json)
+  const tokens = themeResult.success
+    ? themeResult.data.tokens
+    : themeConfigSchema.parse({}).tokens
+
+  // Font scale class: adjusts base font size on the tenant wrapper
+  const fontSizeClass =
+    tokens.fontScale === 'compact'
+      ? 'text-[0.9em]'
+      : tokens.fontScale === 'spacious'
+        ? 'text-[1.1em]'
+        : ''
+
   return (
-    <div data-tenant-id={tenant.id} data-tenant-slug={tenant.slug}>
+    <div
+      data-tenant-id={tenant.id}
+      data-tenant-slug={tenant.slug}
+      className={fontSizeClass}
+      style={buildThemeStyle(tokens)}
+    >
       {children}
     </div>
   )
