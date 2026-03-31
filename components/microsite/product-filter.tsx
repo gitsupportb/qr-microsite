@@ -125,26 +125,31 @@ export function ProductFilter({ products, categories, tenantId, businessProfileI
         ))}
       </div>
 
-      {/* Product detail modal -- glass background */}
+      {/* Product detail modal */}
       {selectedProduct && (
         <div
-          className="fixed inset-0 z-[100] flex items-end justify-center bg-black/30 backdrop-blur-sm sm:items-center sm:p-4"
+          className="fixed inset-0 z-[100] flex items-end justify-center bg-slate-900/40 backdrop-blur-md sm:items-center sm:p-6"
           onClick={(e) => { if (e.target === e.currentTarget) setSelectedProduct(null) }}
         >
-          <div className="relative max-h-[90vh] w-full overflow-y-auto rounded-t-2xl bg-white/80 backdrop-blur-2xl border border-white/20 shadow-2xl shadow-black/[0.08] sm:max-w-lg sm:rounded-2xl">
+          <div
+            className="relative max-h-[92vh] w-full overflow-y-auto overscroll-contain rounded-t-3xl bg-white/90 backdrop-blur-2xl border border-white/30 shadow-2xl shadow-black/20 sm:max-w-lg sm:rounded-3xl"
+            style={{ animation: 'slideUp 250ms ease-out' }}
+          >
+            <style>{`@keyframes slideUp { from { transform: translateY(24px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }`}</style>
+
             {/* Close button */}
             <button
               type="button"
               onClick={() => setSelectedProduct(null)}
-              className="absolute right-3 top-3 z-10 flex size-8 items-center justify-center rounded-full bg-white/50 backdrop-blur-sm border border-white/30 text-slate-400 transition-all duration-200 hover:bg-white/70 hover:text-slate-600"
+              className="absolute right-4 top-4 z-10 flex size-9 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm border border-white/40 text-slate-500 shadow-sm transition-all duration-200 hover:bg-white hover:text-slate-800 hover:shadow-md"
               aria-label="Close"
             >
-              <X className="size-4" />
+              <X className="size-4" strokeWidth={2.5} />
             </button>
 
             {/* Product image */}
-            {selectedProduct.image_url && (
-              <div className="relative aspect-[16/9] w-full overflow-hidden rounded-t-2xl bg-slate-100/50">
+            {selectedProduct.image_url ? (
+              <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-100">
                 <Image
                   src={selectedProduct.image_url}
                   alt={selectedProduct.title}
@@ -152,34 +157,42 @@ export function ProductFilter({ products, categories, tenantId, businessProfileI
                   className="object-cover"
                   sizes="(max-width: 640px) 100vw, 512px"
                 />
+                {/* Gradient fade into content */}
+                <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white/90 to-transparent" />
+              </div>
+            ) : (
+              <div className="flex aspect-[16/9] w-full items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50/30">
+                <Package className="size-12 text-slate-200" />
               </div>
             )}
 
-            <div className="p-5 sm:p-6">
-              {/* Category */}
+            <div className="px-5 pb-6 pt-2 sm:px-6">
+              {/* Category pill */}
               {selectedProduct.product_categories && (
-                <p className="mb-1 text-[10px] uppercase tracking-wide text-blue-600">
+                <span className="mb-2 inline-block rounded-full bg-blue-500/8 border border-blue-500/10 px-2.5 py-0.5 text-[10px] uppercase tracking-wider font-medium text-blue-600">
                   {selectedProduct.product_categories.name}
-                </p>
+                </span>
               )}
 
               {/* Title */}
-              <h3 className="text-xl font-semibold leading-tight tracking-tight text-slate-800">
+              <h3 className="text-xl font-semibold leading-tight tracking-tight text-slate-900 sm:text-2xl">
                 {selectedProduct.title}
               </h3>
 
               {/* Short description */}
               {selectedProduct.short_description && (
-                <p className="mt-2 text-sm leading-relaxed text-slate-500">
+                <p className="mt-2.5 text-[0.9375rem] leading-relaxed text-slate-500">
                   {selectedProduct.short_description}
                 </p>
               )}
 
               {/* Long description */}
               {selectedProduct.long_description && (
-                <p className="mt-3 text-sm leading-relaxed text-slate-600">
-                  {selectedProduct.long_description}
-                </p>
+                <div className="mt-4 rounded-xl bg-slate-50/80 border border-slate-100 p-4">
+                  <p className="text-sm leading-relaxed text-slate-600">
+                    {selectedProduct.long_description}
+                  </p>
+                </div>
               )}
 
               {/* Video embed */}
@@ -187,8 +200,8 @@ export function ProductFilter({ products, categories, tenantId, businessProfileI
                 const embedUrl = getYouTubeEmbedUrl(selectedProduct.video_url!)
                 if (embedUrl) {
                   return (
-                    <div className="mt-4 overflow-hidden rounded-xl border border-white/30">
-                      <div className="relative aspect-video w-full">
+                    <div className="mt-5 overflow-hidden rounded-2xl border border-slate-200/60 shadow-sm">
+                      <div className="relative aspect-video w-full bg-black">
                         <iframe
                           src={embedUrl}
                           title={`${selectedProduct.title} video`}
@@ -200,53 +213,52 @@ export function ProductFilter({ products, categories, tenantId, businessProfileI
                     </div>
                   )
                 }
-                // Non-YouTube video: show as a link
                 return (
                   <a
                     href={selectedProduct.video_url!}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-4 flex items-center gap-2 rounded-xl bg-white/50 backdrop-blur-sm border border-white/30 px-3 py-2.5 text-sm transition-all duration-200 hover:bg-white/70"
+                    className="mt-5 flex items-center gap-2.5 rounded-xl bg-slate-50 border border-slate-100 px-4 py-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100"
                   >
                     <Play className="size-4 shrink-0 text-blue-600" />
-                    <span className="min-w-0 flex-1 font-medium text-slate-800">Watch Video</span>
+                    Watch Video
                   </a>
                 )
               })()}
 
-              {/* Linked documents */}
+              {/* Linked documents — uses /api/documents/[id] for never-expire URLs */}
               {productDocs.length > 0 && (
-                <div className="mt-5 border-t border-slate-200/50 pt-4">
-                  <p className="mb-3 text-[0.6875rem] uppercase tracking-[0.1em] text-slate-400 font-medium">
-                    Documents
+                <div className="mt-5 border-t border-slate-200/60 pt-4">
+                  <p className="mb-3 text-[0.6875rem] uppercase tracking-[0.12em] text-slate-400 font-medium">
+                    Downloads
                   </p>
                   <div className="space-y-2">
                     {productDocs.map((doc) => (
                       <a
                         key={doc.id}
-                        href={doc.downloadUrl || doc.file_url || '#'}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2.5 rounded-xl bg-white/50 backdrop-blur-sm border border-white/30 px-3 py-2.5 text-sm transition-all duration-200 hover:bg-white/70"
+                        href={`/api/documents/${doc.id}`}
+                        className="flex items-center gap-3 rounded-xl bg-slate-50/80 border border-slate-100 px-4 py-3 text-sm transition-all duration-200 hover:bg-blue-50/80 hover:border-blue-100"
                       >
-                        <FileText className="size-4 shrink-0 text-blue-600" />
-                        <span className="min-w-0 flex-1 font-medium text-slate-800">{doc.title}</span>
-                        <Download className="size-3.5 shrink-0 text-slate-400" />
+                        <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-blue-500/8">
+                          <FileText className="size-4 text-blue-600" />
+                        </span>
+                        <span className="min-w-0 flex-1 font-medium text-slate-700">{doc.title}</span>
+                        <Download className="size-4 shrink-0 text-slate-400" />
                       </a>
                     ))}
                   </div>
                 </div>
               )}
 
-              {/* All documents link if no product-specific docs */}
+              {/* All documents link */}
               {productDocs.length === 0 && documents.length > 0 && (
-                <div className="mt-5 border-t border-slate-200/50 pt-4">
+                <div className="mt-5 border-t border-slate-200/60 pt-4">
                   <a
                     href="#catalog"
                     onClick={() => setSelectedProduct(null)}
-                    className="inline-flex items-center gap-1.5 text-xs font-medium text-blue-600"
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700"
                   >
-                    <FileText className="size-3.5" />
+                    <FileText className="size-4" />
                     View all documents
                   </a>
                 </div>
