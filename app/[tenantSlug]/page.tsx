@@ -5,6 +5,7 @@ import { AboutSection } from '@/components/microsite/about-section'
 import { TrustSection } from '@/components/microsite/trust-section'
 import { RepresentativesSection } from '@/components/microsite/representatives-section'
 import { ProductShowcase } from '@/components/microsite/product-showcase'
+import { DocumentSection } from '@/components/microsite/document-section'
 import { PlaceholderSection } from '@/components/microsite/placeholder-section'
 import { MicrositeFooter } from '@/components/microsite/microsite-footer'
 import { StickyCtaBar } from '@/components/microsite/sticky-cta-bar'
@@ -70,7 +71,10 @@ export default async function MicrositePage({ params }: MicrositePageProps) {
 
       <TrustSection trustContent={profile.trust_content} />
 
-      <PlaceholderSection id="catalog" label="Catalog" />
+      <DocumentSection
+        documents={profile.documents ?? []}
+        tenantSlug={tenantSlug}
+      />
 
       <PlaceholderSection id="lead-capture" label="Get in Touch" />
 
