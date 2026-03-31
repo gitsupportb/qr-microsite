@@ -1,35 +1,26 @@
 import type { ProductWithCategory } from '@/lib/queries/microsite'
+import type { Database } from '@/lib/supabase/types'
 import { ProductFilter } from '@/components/microsite/product-filter'
+
+type DocumentRow = Database['public']['Tables']['documents']['Row']
 
 interface ProductShowcaseProps {
   products: ProductWithCategory[]
   tenantId?: string
   businessProfileId?: string
+  documents?: (DocumentRow & { downloadUrl?: string | null })[]
 }
 
-/**
- * Server Component wrapper for the product showcase section.
- * Filters to visible products, sorts featured-first then by sort_order,
- * extracts unique categories, and passes data to the client filter component.
- * Returns null when no visible products exist (hides section entirely).
- */
-export function ProductShowcase({ products, tenantId, businessProfileId }: ProductShowcaseProps) {
-  // Filter to visible products only and sort: featured first, then by sort_order
+export function ProductShowcase({ products, tenantId, businessProfileId, documents = [] }: ProductShowcaseProps) {
   const visibleProducts = products
     .filter((p) => p.visible)
     .sort((a, b) => {
-      if (a.featured !== b.featured) {
-        return a.featured ? -1 : 1
-      }
+      if (a.featured !== b.featured) return a.featured ? -1 : 1
       return a.sort_order - b.sort_order
     })
 
-  // No visible products -- hide section entirely (no empty state for visitors)
-  if (visibleProducts.length === 0) {
-    return null
-  }
+  if (visibleProducts.length === 0) return null
 
-  // Extract unique categories from the visible products (deduplicate by category id)
   const categoryMap = new Map<string, { id: string; name: string; slug: string }>()
   for (const product of visibleProducts) {
     if (product.product_categories && product.category_id) {
@@ -40,7 +31,6 @@ export function ProductShowcase({ products, tenantId, businessProfileId }: Produ
       })
     }
   }
-  const categories = Array.from(categoryMap.values())
 
   return (
     <section id="products" className="px-5 sm:px-8" aria-label="Products">
@@ -48,7 +38,13 @@ export function ProductShowcase({ products, tenantId, businessProfileId }: Produ
         <p className="mb-5 text-xs font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
           Products
         </p>
-        <ProductFilter products={visibleProducts} categories={categories} tenantId={tenantId} businessProfileId={businessProfileId} />
+        <ProductFilter
+          products={visibleProducts}
+          categories={Array.from(categoryMap.values())}
+          tenantId={tenantId}
+          businessProfileId={businessProfileId}
+          documents={documents}
+        />
       </div>
     </section>
   )

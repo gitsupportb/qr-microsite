@@ -90,7 +90,7 @@ export default async function MicrositePage({ params }: MicrositePageProps) {
         businessProfileId={profile.id}
       />
     ),
-    products: <ProductShowcase products={profile.products ?? []} tenantId={tenant.id} businessProfileId={profile.id} />,
+    products: <ProductShowcase products={profile.products ?? []} tenantId={tenant.id} businessProfileId={profile.id} documents={profile.documents ?? []} />,
     about: <AboutSection aboutContent={profile.about_content} />,
     trust: <TrustSection trustContent={profile.trust_content} />,
     documents: (
