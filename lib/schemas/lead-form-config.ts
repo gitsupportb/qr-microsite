@@ -20,6 +20,7 @@ export const leadFormConfigSchema = z.object({
     .string()
     .min(1, 'Thank you message is required')
     .max(500, 'Thank you message must be 500 characters or less'),
+  notification_emails: z.string().max(500).optional(),
 })
 
 export type LeadFormConfig = z.infer<typeof leadFormConfigSchema>
@@ -36,4 +37,5 @@ export const defaultLeadFormConfig: LeadFormConfig = {
   },
   cta_text: 'Get in Touch',
   thank_you_message: "Thank you! We'll be in touch soon.",
+  notification_emails: '',
 }
