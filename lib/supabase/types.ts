@@ -103,6 +103,7 @@ export type Database = {
           about_content: Json
           trust_content: Json
           comm_channels_enabled: Json
+          lead_form_config: Json
           created_at: string
           updated_at: string
         }
@@ -124,6 +125,7 @@ export type Database = {
           about_content?: Json
           trust_content?: Json
           comm_channels_enabled?: Json
+          lead_form_config?: Json
           created_at?: string
           updated_at?: string
         }
@@ -145,6 +147,7 @@ export type Database = {
           about_content?: Json
           trust_content?: Json
           comm_channels_enabled?: Json
+          lead_form_config?: Json
           created_at?: string
           updated_at?: string
         }
