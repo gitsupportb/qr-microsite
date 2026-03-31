@@ -37,7 +37,7 @@ const navItems = [
   { label: 'Documents', href: '/admin/documents', icon: FileText, disabled: false },
   { label: 'Leads', href: '/admin/leads', icon: Users, disabled: false },
   { label: 'QR Codes', href: '/admin/qr-codes', icon: QrCode, disabled: false },
-  { label: 'Analytics', href: '/admin/analytics', icon: BarChart3, disabled: true },
+  { label: 'Analytics', href: '/admin/analytics', icon: BarChart3, disabled: false },
   { label: 'Theme', href: '/admin/theme', icon: Palette, disabled: false },
 ]
 
