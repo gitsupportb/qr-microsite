@@ -7,11 +7,19 @@ type TenantRow = Tables['tenants']['Row']
 type BusinessProfileRow = Tables['business_profiles']['Row']
 type RepresentativeRow = Tables['representatives']['Row']
 type CtaConfigurationRow = Tables['cta_configurations']['Row']
+type ProductRow = Tables['products']['Row']
+type ProductCategoryRow = Tables['product_categories']['Row']
 
-/** Business profile with nested representatives and CTA configurations */
+/** Product with its category info for public display */
+export type ProductWithCategory = ProductRow & {
+  product_categories: Pick<ProductCategoryRow, 'id' | 'name' | 'slug'> | null
+}
+
+/** Business profile with nested representatives, CTA configurations, and products */
 export type BusinessProfile = BusinessProfileRow & {
   representatives: RepresentativeRow[]
   cta_configurations: CtaConfigurationRow[]
+  products: ProductWithCategory[]
 }
 
 /** Tenant with nested business profiles (PostgREST returns array for one-to-many) */
@@ -46,6 +54,11 @@ export const getMicrositeData = cache(
           ),
           cta_configurations(
             id, type, label, destination, enabled, sort_order
+          ),
+          products(
+            id, title, slug, short_description, image_url,
+            featured, visible, sort_order, category_id,
+            product_categories(id, name, slug)
           )
         )`
       )
