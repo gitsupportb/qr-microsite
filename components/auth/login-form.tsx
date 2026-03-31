@@ -39,10 +39,10 @@ export function LoginForm() {
   }
 
   return (
-    <Card>
+    <Card className="bg-white/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/[0.03] rounded-2xl">
       <CardHeader>
-        <CardTitle>Log in</CardTitle>
-        <CardDescription>
+        <CardTitle className="text-slate-800">Log in</CardTitle>
+        <CardDescription className="text-slate-500">
           Enter your email and password to access your dashboard
         </CardDescription>
       </CardHeader>
@@ -50,11 +50,12 @@ export function LoginForm() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {error && <p className="text-sm text-red-600">{error}</p>}
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" className="text-slate-800">Email</Label>
             <Input
               id="email"
               type="email"
               placeholder="you@example.com"
+              className="bg-white/50 border-white/30 focus:bg-white/80 focus:border-blue-500/30 backdrop-blur-sm"
               {...register('email')}
             />
             {errors.email && (
@@ -62,10 +63,11 @@ export function LoginForm() {
             )}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password" className="text-slate-800">Password</Label>
             <Input
               id="password"
               type="password"
+              className="bg-white/50 border-white/30 focus:bg-white/80 focus:border-blue-500/30 backdrop-blur-sm"
               {...register('password')}
             />
             {errors.password && (
@@ -77,7 +79,7 @@ export function LoginForm() {
           <Button type="submit" className="w-full" disabled={isPending}>
             {isPending ? 'Logging in...' : 'Log in'}
           </Button>
-          <p className="text-center text-sm text-gray-600">
+          <p className="text-center text-sm text-slate-500">
             No account?{' '}
             <Link href="/signup" className="text-blue-600 hover:underline">
               Sign up

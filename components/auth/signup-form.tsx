@@ -39,10 +39,10 @@ export function SignupForm() {
   }
 
   return (
-    <Card>
+    <Card className="bg-white/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/[0.03] rounded-2xl">
       <CardHeader>
-        <CardTitle>Create account</CardTitle>
-        <CardDescription>
+        <CardTitle className="text-slate-800">Create account</CardTitle>
+        <CardDescription className="text-slate-500">
           Sign up to create your business microsite
         </CardDescription>
       </CardHeader>
@@ -50,11 +50,12 @@ export function SignupForm() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {error && <p className="text-sm text-red-600">{error}</p>}
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" className="text-slate-800">Email</Label>
             <Input
               id="email"
               type="email"
               placeholder="you@example.com"
+              className="bg-white/50 border-white/30 focus:bg-white/80 focus:border-blue-500/30 backdrop-blur-sm"
               {...register('email')}
             />
             {errors.email && (
@@ -62,10 +63,11 @@ export function SignupForm() {
             )}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password" className="text-slate-800">Password</Label>
             <Input
               id="password"
               type="password"
+              className="bg-white/50 border-white/30 focus:bg-white/80 focus:border-blue-500/30 backdrop-blur-sm"
               {...register('password')}
             />
             {errors.password && (
@@ -75,10 +77,11 @@ export function SignupForm() {
             )}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirm password</Label>
+            <Label htmlFor="confirmPassword" className="text-slate-800">Confirm password</Label>
             <Input
               id="confirmPassword"
               type="password"
+              className="bg-white/50 border-white/30 focus:bg-white/80 focus:border-blue-500/30 backdrop-blur-sm"
               {...register('confirmPassword')}
             />
             {errors.confirmPassword && (
@@ -90,7 +93,7 @@ export function SignupForm() {
           <Button type="submit" className="w-full" disabled={isPending}>
             {isPending ? 'Creating account...' : 'Create account'}
           </Button>
-          <p className="text-center text-sm text-gray-600">
+          <p className="text-center text-sm text-slate-500">
             Already have an account?{' '}
             <Link href="/login" className="text-blue-600 hover:underline">
               Log in

@@ -30,7 +30,9 @@ export default async function BusinessProfilePage() {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <BusinessProfileForm initialData={profile} tenantId={tenantId} />
+      <div className="rounded-2xl bg-white/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/[0.03] p-6">
+        <BusinessProfileForm initialData={profile} tenantId={tenantId} />
+      </div>
     </div>
   )
 }

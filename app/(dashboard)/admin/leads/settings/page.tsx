@@ -12,9 +12,9 @@ export default async function LeadFormSettingsPage() {
     if (result.noProfile) {
       return (
         <div className="mx-auto max-w-2xl">
-          <h1 className="mb-6 text-2xl font-bold">Lead Form Settings</h1>
-          <div className="rounded-lg border bg-card p-6 text-card-foreground">
-            <p className="text-muted-foreground">
+          <h1 className="mb-6 text-2xl font-bold text-slate-800">Lead Form Settings</h1>
+          <div className="rounded-2xl bg-white/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/[0.03] p-6">
+            <p className="text-slate-500">
               Please create your business profile first before configuring lead
               form settings.
             </p>
@@ -24,8 +24,8 @@ export default async function LeadFormSettingsPage() {
     }
     return (
       <div className="mx-auto max-w-2xl">
-        <h1 className="mb-6 text-2xl font-bold">Lead Form Settings</h1>
-        <div className="rounded-lg border border-destructive/50 bg-card p-6 text-card-foreground">
+        <h1 className="mb-6 text-2xl font-bold text-slate-800">Lead Form Settings</h1>
+        <div className="rounded-2xl bg-white/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/[0.03] p-6">
           <p className="text-destructive">{result.error}</p>
         </div>
       </div>
@@ -34,8 +34,10 @@ export default async function LeadFormSettingsPage() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <h1 className="mb-6 text-2xl font-bold">Lead Form Settings</h1>
-      <LeadFormSettings config={result.data} />
+      <h1 className="mb-6 text-2xl font-bold text-slate-800">Lead Form Settings</h1>
+      <div className="rounded-2xl bg-white/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/[0.03] p-6">
+        <LeadFormSettings config={result.data} />
+      </div>
     </div>
   )
 }

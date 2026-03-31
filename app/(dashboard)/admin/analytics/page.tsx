@@ -38,12 +38,12 @@ export default async function AnalyticsPage({
         summaryResult.error || timeSeriesResult.error || breakdownsResult.error
       return (
         <div className="mx-auto max-w-6xl">
-          <Card>
+          <Card className="bg-white/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/[0.03] rounded-2xl">
             <CardHeader>
-              <CardTitle>Error Loading Analytics</CardTitle>
+              <CardTitle className="text-slate-800">Error Loading Analytics</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">{errorMsg}</p>
+              <p className="text-sm text-slate-500">{errorMsg}</p>
             </CardContent>
           </Card>
         </div>
@@ -52,23 +52,25 @@ export default async function AnalyticsPage({
 
     return (
       <div className="mx-auto max-w-6xl">
-        <AnalyticsDashboard
-          summary={summaryResult.data!}
-          timeSeries={timeSeriesResult.data!}
-          breakdowns={breakdownsResult.data!}
-          initialDays={days}
-        />
+        <div className="rounded-2xl bg-white/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/[0.03] p-6">
+          <AnalyticsDashboard
+            summary={summaryResult.data!}
+            timeSeries={timeSeriesResult.data!}
+            breakdowns={breakdownsResult.data!}
+            initialDays={days}
+          />
+        </div>
       </div>
     )
   } catch {
     return (
       <div className="mx-auto max-w-6xl">
-        <Card>
+        <Card className="bg-white/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/[0.03] rounded-2xl">
           <CardHeader>
-            <CardTitle>Error Loading Analytics</CardTitle>
+            <CardTitle className="text-slate-800">Error Loading Analytics</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-slate-500">
               An unexpected error occurred. Please try again.
             </p>
           </CardContent>

@@ -217,9 +217,9 @@ export function QrGenerator({ initialQrCode, logoUrl, themeTokens, tenantSlug }:
   return (
     <div className="grid gap-6 lg:grid-cols-2">
       {/* QR Preview */}
-      <Card>
+      <Card className="bg-white/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/[0.03] rounded-2xl">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-slate-800">
             <QrCode className="h-5 w-5" />
             QR Code Preview
           </CardTitle>
@@ -232,9 +232,9 @@ export function QrGenerator({ initialQrCode, logoUrl, themeTokens, tenantSlug }:
               style={{ minHeight: 316, minWidth: 316 }}
             />
             {!isReady && (
-              <p className="text-sm text-muted-foreground">Loading QR code...</p>
+              <p className="text-sm text-slate-500">Loading QR code...</p>
             )}
-            <p className="text-center text-xs text-muted-foreground break-all">
+            <p className="text-center text-xs text-slate-500 break-all">
               {targetUrl}
             </p>
           </div>
@@ -243,43 +243,44 @@ export function QrGenerator({ initialQrCode, logoUrl, themeTokens, tenantSlug }:
 
       {/* Configuration */}
       <div className="flex flex-col gap-4">
-        <Card>
+        <Card className="bg-white/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/[0.03] rounded-2xl">
           <CardHeader>
-            <CardTitle>Configuration</CardTitle>
+            <CardTitle className="text-slate-800">Configuration</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             {/* Campaign Name */}
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="campaign-name">Campaign Name</Label>
+              <Label htmlFor="campaign-name" className="text-slate-800">Campaign Name</Label>
               <Input
                 id="campaign-name"
                 placeholder="e.g. Tech Expo 2026"
                 value={campaignName}
                 onChange={(e) => setCampaignName(e.target.value)}
                 maxLength={100}
+                className="bg-white/50 border-white/30 focus:bg-white/80 focus:border-blue-500/30 backdrop-blur-sm"
               />
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-slate-500">
                 Optional label for tracking which event or campaign this QR code is for.
               </p>
             </div>
 
             {/* Dot Color */}
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="dot-color">Dot Color</Label>
+              <Label htmlFor="dot-color" className="text-slate-800">Dot Color</Label>
               <div className="flex items-center gap-2">
                 <input
                   id="dot-color"
                   type="color"
                   value={dotColor}
                   onChange={(e) => setDotColor(e.target.value)}
-                  className="h-10 w-14 cursor-pointer rounded border border-input"
+                  className="h-10 w-14 cursor-pointer rounded border border-white/30 bg-white/50 backdrop-blur-sm"
                 />
                 <Input
                   value={dotColor}
                   onChange={(e) => {
                     if (/^#[0-9a-fA-F]{0,6}$/.test(e.target.value)) setDotColor(e.target.value)
                   }}
-                  className="w-28 font-mono"
+                  className="w-28 font-mono bg-white/50 border-white/30 focus:bg-white/80 focus:border-blue-500/30 backdrop-blur-sm"
                   maxLength={7}
                 />
               </div>
@@ -287,21 +288,21 @@ export function QrGenerator({ initialQrCode, logoUrl, themeTokens, tenantSlug }:
 
             {/* Background Color */}
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="bg-color">Background Color</Label>
+              <Label htmlFor="bg-color" className="text-slate-800">Background Color</Label>
               <div className="flex items-center gap-2">
                 <input
                   id="bg-color"
                   type="color"
                   value={backgroundColor}
                   onChange={(e) => setBackgroundColor(e.target.value)}
-                  className="h-10 w-14 cursor-pointer rounded border border-input"
+                  className="h-10 w-14 cursor-pointer rounded border border-white/30 bg-white/50 backdrop-blur-sm"
                 />
                 <Input
                   value={backgroundColor}
                   onChange={(e) => {
                     if (/^#[0-9a-fA-F]{0,6}$/.test(e.target.value)) setBackgroundColor(e.target.value)
                   }}
-                  className="w-28 font-mono"
+                  className="w-28 font-mono bg-white/50 border-white/30 focus:bg-white/80 focus:border-blue-500/30 backdrop-blur-sm"
                   maxLength={7}
                 />
               </div>
@@ -309,12 +310,12 @@ export function QrGenerator({ initialQrCode, logoUrl, themeTokens, tenantSlug }:
 
             {/* Dot Style */}
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="dot-style">Dot Style</Label>
+              <Label htmlFor="dot-style" className="text-slate-800">Dot Style</Label>
               <select
                 id="dot-style"
                 value={dotStyle}
                 onChange={(e) => setDotStyle(e.target.value as DotStyle)}
-                className="h-10 rounded-md border border-input bg-background px-3 text-sm"
+                className="h-10 rounded-md border border-white/30 bg-white/50 backdrop-blur-sm px-3 text-sm focus:bg-white/80 focus:border-blue-500/30"
               >
                 {DOT_STYLES.map((s) => (
                   <option key={s.value} value={s.value}>{s.label}</option>
@@ -324,12 +325,12 @@ export function QrGenerator({ initialQrCode, logoUrl, themeTokens, tenantSlug }:
 
             {/* Corner Square Style */}
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="corner-square-style">Corner Square Style</Label>
+              <Label htmlFor="corner-square-style" className="text-slate-800">Corner Square Style</Label>
               <select
                 id="corner-square-style"
                 value={cornerSquareStyle}
                 onChange={(e) => setCornerSquareStyle(e.target.value as CornerSquareStyle)}
-                className="h-10 rounded-md border border-input bg-background px-3 text-sm"
+                className="h-10 rounded-md border border-white/30 bg-white/50 backdrop-blur-sm px-3 text-sm focus:bg-white/80 focus:border-blue-500/30"
               >
                 {CORNER_SQUARE_STYLES.map((s) => (
                   <option key={s.value} value={s.value}>{s.label}</option>
@@ -339,12 +340,12 @@ export function QrGenerator({ initialQrCode, logoUrl, themeTokens, tenantSlug }:
 
             {/* Corner Dot Style */}
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="corner-dot-style">Corner Dot Style</Label>
+              <Label htmlFor="corner-dot-style" className="text-slate-800">Corner Dot Style</Label>
               <select
                 id="corner-dot-style"
                 value={cornerDotStyle}
                 onChange={(e) => setCornerDotStyle(e.target.value as CornerDotStyle)}
-                className="h-10 rounded-md border border-input bg-background px-3 text-sm"
+                className="h-10 rounded-md border border-white/30 bg-white/50 backdrop-blur-sm px-3 text-sm focus:bg-white/80 focus:border-blue-500/30"
               >
                 {CORNER_DOT_STYLES.map((s) => (
                   <option key={s.value} value={s.value}>{s.label}</option>
@@ -355,8 +356,8 @@ export function QrGenerator({ initialQrCode, logoUrl, themeTokens, tenantSlug }:
             {/* Embed Logo */}
             <div className="flex items-center justify-between">
               <div className="flex flex-col gap-0.5">
-                <Label htmlFor="embed-logo">Embed Company Logo</Label>
-                <p className="text-xs text-muted-foreground">
+                <Label htmlFor="embed-logo" className="text-slate-800">Embed Company Logo</Label>
+                <p className="text-xs text-slate-500">
                   {logoUrl ? 'Place your company logo in the center of the QR code.' : 'Upload a logo in Business Profile first.'}
                 </p>
               </div>
@@ -371,18 +372,18 @@ export function QrGenerator({ initialQrCode, logoUrl, themeTokens, tenantSlug }:
         </Card>
 
         {/* Actions */}
-        <Card>
+        <Card className="bg-white/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/[0.03] rounded-2xl">
           <CardContent className="flex flex-col gap-3 pt-6">
             <Button onClick={handleSave} disabled={saving} className="w-full">
               <Save className="mr-2 h-4 w-4" />
               {saving ? 'Saving...' : 'Save Configuration'}
             </Button>
             <div className="grid grid-cols-2 gap-3">
-              <Button variant="outline" onClick={handleDownloadPng} disabled={!isReady}>
+              <Button variant="outline" onClick={handleDownloadPng} disabled={!isReady} className="border-white/30 bg-white/50 hover:bg-white/70">
                 <Download className="mr-2 h-4 w-4" />
                 PNG (300 DPI)
               </Button>
-              <Button variant="outline" onClick={handleDownloadSvg} disabled={!isReady}>
+              <Button variant="outline" onClick={handleDownloadSvg} disabled={!isReady} className="border-white/30 bg-white/50 hover:bg-white/70">
                 <Download className="mr-2 h-4 w-4" />
                 SVG
               </Button>

@@ -29,12 +29,12 @@ export default async function LeadsPage() {
   if ('error' in leadsResult) {
     return (
       <div className="mx-auto max-w-6xl">
-        <Card>
+        <Card className="bg-white/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/[0.03] rounded-2xl">
           <CardHeader>
-            <CardTitle>Error Loading Leads</CardTitle>
+            <CardTitle className="text-slate-800">Error Loading Leads</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground">{leadsResult.error}</p>
+            <p className="text-sm text-slate-500">{leadsResult.error}</p>
           </CardContent>
         </Card>
       </div>
@@ -44,12 +44,12 @@ export default async function LeadsPage() {
   if ('error' in metricsResult) {
     return (
       <div className="mx-auto max-w-6xl">
-        <Card>
+        <Card className="bg-white/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/[0.03] rounded-2xl">
           <CardHeader>
-            <CardTitle>Error Loading Metrics</CardTitle>
+            <CardTitle className="text-slate-800">Error Loading Metrics</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground">{metricsResult.error}</p>
+            <p className="text-sm text-slate-500">{metricsResult.error}</p>
           </CardContent>
         </Card>
       </div>
@@ -58,10 +58,12 @@ export default async function LeadsPage() {
 
   return (
     <div className="mx-auto max-w-6xl">
-      <LeadsDashboard
-        initialLeads={leadsResult.data}
-        metrics={metricsResult.data}
-      />
+      <div className="rounded-2xl bg-white/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/[0.03] p-6">
+        <LeadsDashboard
+          initialLeads={leadsResult.data}
+          metrics={metricsResult.data}
+        />
+      </div>
     </div>
   )
 }

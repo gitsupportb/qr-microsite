@@ -47,13 +47,13 @@ export function AppSidebar({ user }: { user: { email?: string } }) {
   const pathname = usePathname()
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="icon" className="bg-white/60 backdrop-blur-xl border-r border-white/20">
       <SidebarHeader>
         <div className="flex items-center gap-2 px-2 py-1.5">
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground">
             <QrCode className="h-4 w-4" />
           </div>
-          <span className="truncate text-sm font-semibold group-data-[collapsible=icon]:hidden">
+          <span className="truncate text-sm font-semibold text-slate-800 group-data-[collapsible=icon]:hidden">
             QR Microsite
           </span>
         </div>
@@ -61,7 +61,7 @@ export function AppSidebar({ user }: { user: { email?: string } }) {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Management</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-slate-500">Management</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {navItems.map((item) => (
@@ -80,6 +80,11 @@ export function AppSidebar({ user }: { user: { email?: string } }) {
                       tooltip={item.label}
                       isActive={pathname === item.href || pathname.startsWith(item.href + '/')}
                       render={<Link href={item.href} />}
+                      className={
+                        pathname === item.href || pathname.startsWith(item.href + '/')
+                          ? 'bg-white/70 text-blue-600'
+                          : 'hover:bg-white/50'
+                      }
                     >
                       <item.icon className="h-4 w-4" />
                       <span>{item.label}</span>
@@ -95,14 +100,14 @@ export function AppSidebar({ user }: { user: { email?: string } }) {
       <SidebarFooter>
         <div className="flex flex-col gap-2 px-2 py-1.5 group-data-[collapsible=icon]:items-center">
           {user.email && (
-            <p className="truncate text-xs text-muted-foreground group-data-[collapsible=icon]:hidden">
+            <p className="truncate text-xs text-slate-500 group-data-[collapsible=icon]:hidden">
               {user.email}
             </p>
           )}
           <form action={logoutAction}>
             <button
               type="submit"
-              className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+              className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm text-slate-500 hover:bg-white/50 hover:text-slate-800 transition-colors"
             >
               <LogOut className="h-4 w-4 shrink-0" />
               <span className="group-data-[collapsible=icon]:hidden">Log out</span>

@@ -15,9 +15,9 @@ export default async function QrCodesPage() {
   if (!data) {
     return (
       <div className="mx-auto max-w-4xl">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold tracking-tight">QR Code Generator</h1>
-          <p className="text-muted-foreground">
+        <div className="mb-6 rounded-2xl bg-white/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/[0.03] p-6">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-800">QR Code Generator</h1>
+          <p className="text-slate-500">
             Unable to load QR code data. Please try again.
           </p>
         </div>
@@ -27,9 +27,9 @@ export default async function QrCodesPage() {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight">QR Code Generator</h1>
-        <p className="text-muted-foreground">
+      <div className="mb-6 rounded-2xl bg-white/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/[0.03] p-6">
+        <h1 className="text-2xl font-bold tracking-tight text-slate-800">QR Code Generator</h1>
+        <p className="text-slate-500">
           Create branded QR codes for your event materials. Customize colors, styles, and embed your company logo.
         </p>
       </div>

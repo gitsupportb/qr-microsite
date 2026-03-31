@@ -31,12 +31,14 @@ export default async function ProductsPage() {
   if (!profile) {
     return (
       <div className="mx-auto max-w-4xl">
-        <ProductList
-          initialProducts={[]}
-          categories={[]}
-          tenantId={tenantId}
-          noProfile={true}
-        />
+        <div className="rounded-2xl bg-white/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/[0.03] p-6">
+          <ProductList
+            initialProducts={[]}
+            categories={[]}
+            tenantId={tenantId}
+            noProfile={true}
+          />
+        </div>
       </div>
     )
   }
@@ -57,12 +59,14 @@ export default async function ProductsPage() {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <ProductList
-        initialProducts={products ?? []}
-        categories={categories ?? []}
-        tenantId={tenantId}
-        noProfile={false}
-      />
+      <div className="rounded-2xl bg-white/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/[0.03] p-6">
+        <ProductList
+          initialProducts={products ?? []}
+          categories={categories ?? []}
+          tenantId={tenantId}
+          noProfile={false}
+        />
+      </div>
     </div>
   )
 }

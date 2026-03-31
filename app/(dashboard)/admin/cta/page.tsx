@@ -31,7 +31,9 @@ export default async function CtaConfigurationPage() {
   if (!profile) {
     return (
       <div className="mx-auto max-w-4xl">
-        <CtaConfigList initialData={[]} noProfile={true} />
+        <div className="rounded-2xl bg-white/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/[0.03] p-6">
+          <CtaConfigList initialData={[]} noProfile={true} />
+        </div>
       </div>
     )
   }
@@ -45,7 +47,9 @@ export default async function CtaConfigurationPage() {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <CtaConfigList initialData={ctaConfigs ?? []} />
+      <div className="rounded-2xl bg-white/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/[0.03] p-6">
+        <CtaConfigList initialData={ctaConfigs ?? []} />
+      </div>
     </div>
   )
 }

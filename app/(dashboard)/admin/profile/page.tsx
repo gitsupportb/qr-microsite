@@ -14,11 +14,13 @@ export default async function ProfilePage() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <ProfileForm
-        initialData={
-          profile ?? { name: '', slug: '', email: user.email ?? '' }
-        }
-      />
+      <div className="rounded-2xl bg-white/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/[0.03] p-6">
+        <ProfileForm
+          initialData={
+            profile ?? { name: '', slug: '', email: user.email ?? '' }
+          }
+        />
+      </div>
     </div>
   )
 }

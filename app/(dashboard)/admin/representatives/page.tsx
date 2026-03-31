@@ -31,7 +31,9 @@ export default async function RepresentativesPage() {
   if (!profile) {
     return (
       <div className="mx-auto max-w-4xl">
-        <RepList initialReps={[]} tenantId={tenantId} noProfile={true} />
+        <div className="rounded-2xl bg-white/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/[0.03] p-6">
+          <RepList initialReps={[]} tenantId={tenantId} noProfile={true} />
+        </div>
       </div>
     )
   }
@@ -45,11 +47,13 @@ export default async function RepresentativesPage() {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <RepList
-        initialReps={reps ?? []}
-        tenantId={tenantId}
-        noProfile={false}
-      />
+      <div className="rounded-2xl bg-white/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/[0.03] p-6">
+        <RepList
+          initialReps={reps ?? []}
+          tenantId={tenantId}
+          noProfile={false}
+        />
+      </div>
     </div>
   )
 }
