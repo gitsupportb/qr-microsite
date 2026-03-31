@@ -35,3 +35,48 @@ export async function uploadImage(
 
   return { publicUrl: data.publicUrl }
 }
+
+const ACCEPTED_DOCUMENT_TYPES = ['application/pdf']
+
+export async function uploadDocument(
+  tenantId: string,
+  file: File,
+  existingPath?: string
+): Promise<{ fileUrl: string; storagePath: string } | { error: string }> {
+  // Client-side MIME type validation
+  if (!ACCEPTED_DOCUMENT_TYPES.includes(file.type)) {
+    return { error: 'File must be a PDF' }
+  }
+
+  const supabase = createClient()
+
+  // Determine storage path: reuse existing path for replacement, or generate new
+  let filePath: string
+  if (existingPath) {
+    filePath = existingPath
+  } else {
+    const sanitized = file.name.replace(/[^a-zA-Z0-9.-]/g, '_')
+    const filename = `${Date.now()}-${sanitized}`
+    filePath = `${tenantId}/documents/${filename}`
+  }
+
+  const { error } = await supabase.storage
+    .from('private-documents')
+    .upload(filePath, file, {
+      upsert: true,
+      contentType: file.type,
+    })
+
+  if (error) return { error: error.message }
+
+  // Private bucket requires signed URLs (not public URLs)
+  const { data: signedData, error: signedError } = await supabase.storage
+    .from('private-documents')
+    .createSignedUrl(filePath, 60 * 60) // 1 hour expiry
+
+  if (signedError || !signedData?.signedUrl) {
+    return { error: signedError?.message || 'Failed to generate signed URL' }
+  }
+
+  return { fileUrl: signedData.signedUrl, storagePath: filePath }
+}
