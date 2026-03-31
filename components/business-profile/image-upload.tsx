@@ -9,7 +9,7 @@ import { toast } from 'sonner'
 interface ImageUploadProps {
   currentUrl: string | null
   tenantId: string
-  category: 'logos' | 'hero' | 'representatives'
+  category: 'logos' | 'hero' | 'representatives' | 'products'
   maxSizeMB: number
   onUploadComplete: (url: string) => void
   label: string
