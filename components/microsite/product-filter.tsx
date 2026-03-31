@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import Image from 'next/image'
 import { Package, X, Download, FileText, Play } from 'lucide-react'
 import { trackEvent } from '@/lib/analytics'
@@ -125,151 +126,175 @@ export function ProductFilter({ products, categories, tenantId, businessProfileI
         ))}
       </div>
 
-      {/* Product detail modal — fixed overlay, isolated from grid */}
-      {selectedProduct && (
-        <>
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm"
-            onClick={() => setSelectedProduct(null)}
-            aria-hidden="true"
-          />
-
-          {/* Modal container — centered on all screen sizes */}
-          <div className="fixed inset-0 z-[101] overflow-y-auto overscroll-contain">
-            <div className="flex min-h-full items-center justify-center p-4 sm:p-6">
-              <div
-                className="relative w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/5 sm:max-w-lg"
-                onClick={(e) => e.stopPropagation()}
-                style={{ animation: 'modalIn 200ms ease-out' }}
-              >
-                <style>{`@keyframes modalIn { from { transform: scale(0.97) translateY(8px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }`}</style>
-
-                {/* Close button — sticky top-right */}
-                <button
-                  type="button"
-                  onClick={() => setSelectedProduct(null)}
-                  className="absolute right-3 top-3 z-20 flex size-8 items-center justify-center rounded-full bg-black/10 text-white backdrop-blur-sm transition-colors hover:bg-black/20"
-                  aria-label="Close"
-                >
-                  <X className="size-4" strokeWidth={2.5} />
-                </button>
-
-                {/* Product image */}
-                {selectedProduct.image_url ? (
-                  <div className="relative aspect-[3/2] w-full overflow-hidden bg-slate-100">
-                    <Image
-                      src={selectedProduct.image_url}
-                      alt={selectedProduct.title}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 640px) 100vw, 512px"
-                    />
-                  </div>
-                ) : (
-                  <div className="flex aspect-[3/2] w-full items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50">
-                    <Package className="size-12 text-slate-300" />
-                  </div>
-                )}
-
-                {/* Content */}
-                <div className="p-5 sm:p-6">
-                  {/* Category */}
-                  {selectedProduct.product_categories && (
-                    <span className="mb-2 inline-block rounded-full bg-blue-50 px-2.5 py-0.5 text-[10px] uppercase tracking-wider font-semibold text-blue-600">
-                      {selectedProduct.product_categories.name}
-                    </span>
-                  )}
-
-                  <h3 className="text-lg font-bold leading-snug text-slate-900 sm:text-xl">
-                    {selectedProduct.title}
-                  </h3>
-
-                  {selectedProduct.short_description && (
-                    <p className="mt-2 text-sm leading-relaxed text-slate-500">
-                      {selectedProduct.short_description}
-                    </p>
-                  )}
-
-                  {selectedProduct.long_description && (
-                    <div className="mt-4 rounded-lg bg-slate-50 p-4">
-                      <p className="text-sm leading-relaxed text-slate-600">
-                        {selectedProduct.long_description}
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Video */}
-                  {selectedProduct.video_url && (() => {
-                    const embedUrl = getYouTubeEmbedUrl(selectedProduct.video_url!)
-                    if (embedUrl) {
-                      return (
-                        <div className="mt-4 overflow-hidden rounded-lg">
-                          <div className="relative aspect-video w-full bg-black">
-                            <iframe
-                              src={embedUrl}
-                              title={`${selectedProduct.title} video`}
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                              allowFullScreen
-                              className="absolute inset-0 h-full w-full"
-                            />
-                          </div>
-                        </div>
-                      )
-                    }
-                    return (
-                      <a
-                        href={selectedProduct.video_url!}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-4 flex items-center gap-2 rounded-lg bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100"
-                      >
-                        <Play className="size-4 text-blue-600" />
-                        Watch Video
-                      </a>
-                    )
-                  })()}
-
-                  {/* Documents */}
-                  {productDocs.length > 0 && (
-                    <div className="mt-5 border-t border-slate-100 pt-4">
-                      <p className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-slate-400">
-                        Downloads
-                      </p>
-                      <div className="space-y-2">
-                        {productDocs.map((doc) => (
-                          <a
-                            key={doc.id}
-                            href={`/api/documents/${doc.id}`}
-                            className="flex items-center gap-3 rounded-lg bg-slate-50 px-3 py-2.5 text-sm transition-colors hover:bg-blue-50"
-                          >
-                            <FileText className="size-4 shrink-0 text-blue-600" />
-                            <span className="min-w-0 flex-1 font-medium text-slate-700">{doc.title}</span>
-                            <Download className="size-3.5 shrink-0 text-slate-400" />
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {productDocs.length === 0 && documents.length > 0 && (
-                    <div className="mt-5 border-t border-slate-100 pt-4">
-                      <a
-                        href="#catalog"
-                        onClick={() => setSelectedProduct(null)}
-                        className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700"
-                      >
-                        <FileText className="size-4" />
-                        View all documents
-                      </a>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </>
+      {/* Product detail modal — rendered via portal to escape parent containers */}
+      {selectedProduct && typeof document !== 'undefined' && createPortal(
+        <ProductModal
+          product={selectedProduct}
+          productDocs={productDocs}
+          documents={documents}
+          onClose={() => setSelectedProduct(null)}
+        />,
+        document.body
       )}
     </div>
+  )
+}
+
+/** Modal extracted as separate component for portal rendering + body scroll lock */
+function ProductModal({
+  product,
+  productDocs,
+  documents,
+  onClose,
+}: {
+  product: ProductWithCategory
+  productDocs: (DocumentRow & { downloadUrl?: string | null })[]
+  documents: (DocumentRow & { downloadUrl?: string | null })[]
+  onClose: () => void
+}) {
+  // Lock body scroll while modal is open
+  useEffect(() => {
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = prev }
+  }, [])
+
+  // Close on Escape key
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [onClose])
+
+  return (
+    <>
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+
+      {/* Modal scroll container */}
+      <div className="fixed inset-0 z-[101] overflow-y-auto overscroll-contain">
+        <div className="flex min-h-full items-center justify-center p-4 sm:p-6">
+          <div
+            className="relative w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/5 sm:max-w-lg"
+            onClick={(e) => e.stopPropagation()}
+            style={{ animation: 'modalIn 200ms ease-out' }}
+          >
+            <style>{`@keyframes modalIn { from { transform: scale(0.97) translateY(8px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }`}</style>
+
+            {/* Close */}
+            <button
+              type="button"
+              onClick={onClose}
+              className="absolute right-3 top-3 z-20 flex size-8 items-center justify-center rounded-full bg-black/10 text-white backdrop-blur-sm transition-colors hover:bg-black/20"
+              aria-label="Close"
+            >
+              <X className="size-4" strokeWidth={2.5} />
+            </button>
+
+            {/* Image */}
+            {product.image_url ? (
+              <div className="relative aspect-[3/2] w-full overflow-hidden bg-slate-100">
+                <Image
+                  src={product.image_url}
+                  alt={product.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 100vw, 512px"
+                />
+              </div>
+            ) : (
+              <div className="flex aspect-[3/2] w-full items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50">
+                <Package className="size-12 text-slate-300" />
+              </div>
+            )}
+
+            {/* Content */}
+            <div className="p-5 sm:p-6">
+              {product.product_categories && (
+                <span className="mb-2 inline-block rounded-full bg-blue-50 px-2.5 py-0.5 text-[10px] uppercase tracking-wider font-semibold text-blue-600">
+                  {product.product_categories.name}
+                </span>
+              )}
+
+              <h3 className="text-lg font-bold leading-snug text-slate-900 sm:text-xl">
+                {product.title}
+              </h3>
+
+              {product.short_description && (
+                <p className="mt-2 text-sm leading-relaxed text-slate-500">
+                  {product.short_description}
+                </p>
+              )}
+
+              {product.long_description && (
+                <div className="mt-4 rounded-lg bg-slate-50 p-4">
+                  <p className="text-sm leading-relaxed text-slate-600">
+                    {product.long_description}
+                  </p>
+                </div>
+              )}
+
+              {/* Video */}
+              {product.video_url && (() => {
+                const embedUrl = getYouTubeEmbedUrl(product.video_url!)
+                if (embedUrl) {
+                  return (
+                    <div className="mt-4 overflow-hidden rounded-lg">
+                      <div className="relative aspect-video w-full bg-black">
+                        <iframe
+                          src={embedUrl}
+                          title={`${product.title} video`}
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                          className="absolute inset-0 h-full w-full"
+                        />
+                      </div>
+                    </div>
+                  )
+                }
+                return (
+                  <a href={product.video_url!} target="_blank" rel="noopener noreferrer"
+                    className="mt-4 flex items-center gap-2 rounded-lg bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-100">
+                    <Play className="size-4 text-blue-600" />
+                    Watch Video
+                  </a>
+                )
+              })()}
+
+              {/* Documents */}
+              {productDocs.length > 0 && (
+                <div className="mt-5 border-t border-slate-100 pt-4">
+                  <p className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-slate-400">Downloads</p>
+                  <div className="space-y-2">
+                    {productDocs.map((doc) => (
+                      <a key={doc.id} href={`/api/documents/${doc.id}`}
+                        className="flex items-center gap-3 rounded-lg bg-slate-50 px-3 py-2.5 text-sm hover:bg-blue-50">
+                        <FileText className="size-4 shrink-0 text-blue-600" />
+                        <span className="min-w-0 flex-1 font-medium text-slate-700">{doc.title}</span>
+                        <Download className="size-3.5 shrink-0 text-slate-400" />
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {productDocs.length === 0 && documents.length > 0 && (
+                <div className="mt-5 border-t border-slate-100 pt-4">
+                  <a href="#catalog" onClick={onClose}
+                    className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700">
+                    <FileText className="size-4" />
+                    View all documents
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   )
 }
