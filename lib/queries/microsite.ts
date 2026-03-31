@@ -10,6 +10,7 @@ type CtaConfigurationRow = Tables['cta_configurations']['Row']
 type ProductRow = Tables['products']['Row']
 type ProductCategoryRow = Tables['product_categories']['Row']
 type DocumentRow = Tables['documents']['Row']
+type ThemeConfigurationRow = Tables['theme_configurations']['Row']
 
 /** Product with its category info for public display */
 export type ProductWithCategory = ProductRow & {
@@ -24,9 +25,13 @@ export type BusinessProfile = BusinessProfileRow & {
   documents: DocumentRow[]
 }
 
-/** Tenant with nested business profiles (PostgREST returns array for one-to-many) */
+/** Theme configuration from theme_configurations table */
+export type ThemeConfiguration = Pick<ThemeConfigurationRow, 'id' | 'tokens_json' | 'layout_variant'>
+
+/** Tenant with nested business profiles and theme config (PostgREST returns array even for one-to-one) */
 export type TenantWithProfile = Pick<TenantRow, 'id' | 'name' | 'slug'> & {
   business_profiles: BusinessProfile[]
+  theme_configurations: ThemeConfiguration[]
 }
 
 /** The full microsite data shape returned by getMicrositeData */
@@ -45,6 +50,7 @@ export const getMicrositeData = cache(
       .from('tenants')
       .select(
         `id, name, slug,
+        theme_configurations(id, tokens_json, layout_variant),
         business_profiles(
           id, company_name, tagline, description_short, description_long,
           phone, email, website, address, event_name, stand_number,
