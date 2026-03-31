@@ -60,10 +60,10 @@ export default async function MicrositePage({ params }: MicrositePageProps) {
   const categories = [
     ...new Map(
       (profile.products ?? [])
-        .filter((p) => p.product_categories)
+        .filter((p): p is typeof p & { product_categories: NonNullable<typeof p.product_categories> } => p.product_categories != null)
         .map((p) => [
-          p.product_categories!.id,
-          { id: p.product_categories!.id, name: p.product_categories!.name },
+          p.product_categories.id,
+          { id: p.product_categories.id, name: p.product_categories.name },
         ])
     ).values(),
   ]
