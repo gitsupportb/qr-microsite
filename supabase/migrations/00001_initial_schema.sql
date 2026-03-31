@@ -6,9 +6,10 @@
 -- HELPER FUNCTIONS
 -- ============================================
 
--- auth.tenant_id() - reads tenant_id from JWT app_metadata
+-- public.tenant_id() - reads tenant_id from JWT app_metadata
 -- STABLE: evaluated once per query via initPlan when wrapped in (select ...)
-CREATE OR REPLACE FUNCTION auth.tenant_id()
+-- NOTE: Uses public schema (not auth) because Supabase managed platform restricts auth schema modifications
+CREATE OR REPLACE FUNCTION public.tenant_id()
 RETURNS uuid
 LANGUAGE sql
 STABLE
@@ -51,13 +52,13 @@ ALTER TABLE public.tenants ENABLE ROW LEVEL SECURITY;
 -- Tenant can read own record
 CREATE POLICY "Tenant reads own" ON public.tenants
   FOR SELECT TO authenticated
-  USING (id = (select auth.tenant_id()));
+  USING (id = (select public.tenant_id()));
 
 -- Tenant can update own record
 CREATE POLICY "Tenant updates own" ON public.tenants
   FOR UPDATE TO authenticated
-  USING (id = (select auth.tenant_id()))
-  WITH CHECK (id = (select auth.tenant_id()));
+  USING (id = (select public.tenant_id()))
+  WITH CHECK (id = (select public.tenant_id()));
 
 -- Public can read tenant by slug (for microsite routing)
 CREATE POLICY "Public reads tenant by slug" ON public.tenants
@@ -82,12 +83,12 @@ ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Users read own tenant" ON public.users
   FOR SELECT TO authenticated
-  USING (tenant_id = (select auth.tenant_id()));
+  USING (tenant_id = (select public.tenant_id()));
 
 CREATE POLICY "Users update own profile" ON public.users
   FOR UPDATE TO authenticated
-  USING (id = (select auth.uid()) AND tenant_id = (select auth.tenant_id()))
-  WITH CHECK (tenant_id = (select auth.tenant_id()));
+  USING (id = (select auth.uid()) AND tenant_id = (select public.tenant_id()))
+  WITH CHECK (tenant_id = (select public.tenant_id()));
 
 CREATE INDEX idx_users_tenant_id ON public.users (tenant_id);
 CREATE TRIGGER set_users_updated_at
@@ -120,8 +121,8 @@ ALTER TABLE public.business_profiles ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Tenant isolation" ON public.business_profiles
   FOR ALL TO authenticated
-  USING (tenant_id = (select auth.tenant_id()))
-  WITH CHECK (tenant_id = (select auth.tenant_id()));
+  USING (tenant_id = (select public.tenant_id()))
+  WITH CHECK (tenant_id = (select public.tenant_id()));
 
 CREATE POLICY "Public read active" ON public.business_profiles
   FOR SELECT TO anon
@@ -156,8 +157,8 @@ ALTER TABLE public.representatives ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Tenant isolation" ON public.representatives
   FOR ALL TO authenticated
-  USING (tenant_id = (select auth.tenant_id()))
-  WITH CHECK (tenant_id = (select auth.tenant_id()));
+  USING (tenant_id = (select public.tenant_id()))
+  WITH CHECK (tenant_id = (select public.tenant_id()));
 
 CREATE POLICY "Public read" ON public.representatives
   FOR SELECT TO anon
@@ -187,8 +188,8 @@ ALTER TABLE public.product_categories ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Tenant isolation" ON public.product_categories
   FOR ALL TO authenticated
-  USING (tenant_id = (select auth.tenant_id()))
-  WITH CHECK (tenant_id = (select auth.tenant_id()));
+  USING (tenant_id = (select public.tenant_id()))
+  WITH CHECK (tenant_id = (select public.tenant_id()));
 
 CREATE POLICY "Public read" ON public.product_categories
   FOR SELECT TO anon
@@ -225,8 +226,8 @@ ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Tenant isolation" ON public.products
   FOR ALL TO authenticated
-  USING (tenant_id = (select auth.tenant_id()))
-  WITH CHECK (tenant_id = (select auth.tenant_id()));
+  USING (tenant_id = (select public.tenant_id()))
+  WITH CHECK (tenant_id = (select public.tenant_id()));
 
 CREATE POLICY "Public read visible" ON public.products
   FOR SELECT TO anon
@@ -260,8 +261,8 @@ ALTER TABLE public.documents ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Tenant isolation" ON public.documents
   FOR ALL TO authenticated
-  USING (tenant_id = (select auth.tenant_id()))
-  WITH CHECK (tenant_id = (select auth.tenant_id()));
+  USING (tenant_id = (select public.tenant_id()))
+  WITH CHECK (tenant_id = (select public.tenant_id()));
 
 CREATE POLICY "Public read public docs" ON public.documents
   FOR SELECT TO anon
@@ -298,8 +299,8 @@ ALTER TABLE public.leads ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Tenant isolation" ON public.leads
   FOR ALL TO authenticated
-  USING (tenant_id = (select auth.tenant_id()))
-  WITH CHECK (tenant_id = (select auth.tenant_id()));
+  USING (tenant_id = (select public.tenant_id()))
+  WITH CHECK (tenant_id = (select public.tenant_id()));
 
 -- Anonymous lead submission via service role only (no anon policy for INSERT)
 -- Reads by anon are NOT allowed (leads are private)
@@ -326,8 +327,8 @@ ALTER TABLE public.qr_codes ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Tenant isolation" ON public.qr_codes
   FOR ALL TO authenticated
-  USING (tenant_id = (select auth.tenant_id()))
-  WITH CHECK (tenant_id = (select auth.tenant_id()));
+  USING (tenant_id = (select public.tenant_id()))
+  WITH CHECK (tenant_id = (select public.tenant_id()));
 
 CREATE INDEX idx_qr_codes_tenant_id ON public.qr_codes (tenant_id);
 CREATE TRIGGER set_qr_codes_updated_at
@@ -359,8 +360,8 @@ ALTER TABLE public.cta_configurations ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Tenant isolation" ON public.cta_configurations
   FOR ALL TO authenticated
-  USING (tenant_id = (select auth.tenant_id()))
-  WITH CHECK (tenant_id = (select auth.tenant_id()));
+  USING (tenant_id = (select public.tenant_id()))
+  WITH CHECK (tenant_id = (select public.tenant_id()));
 
 CREATE POLICY "Public read enabled" ON public.cta_configurations
   FOR SELECT TO anon
@@ -397,8 +398,8 @@ ALTER TABLE public.theme_configurations ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Tenant isolation" ON public.theme_configurations
   FOR ALL TO authenticated
-  USING (tenant_id = (select auth.tenant_id()))
-  WITH CHECK (tenant_id = (select auth.tenant_id()));
+  USING (tenant_id = (select public.tenant_id()))
+  WITH CHECK (tenant_id = (select public.tenant_id()));
 
 CREATE POLICY "Public read" ON public.theme_configurations
   FOR SELECT TO anon
@@ -431,7 +432,7 @@ ALTER TABLE public.analytics_events ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Tenant reads own" ON public.analytics_events
   FOR SELECT TO authenticated
-  USING (tenant_id = (select auth.tenant_id()));
+  USING (tenant_id = (select public.tenant_id()));
 
 -- Anonymous writes via service role only (analytics beacon endpoint)
 -- No anon INSERT policy -- service role handles this
@@ -444,7 +445,7 @@ CREATE INDEX idx_analytics_events_tenant_type ON public.analytics_events (tenant
 -- AUTH HOOK: Custom Access Token
 -- ============================================
 -- Injects tenant_id into JWT app_metadata claims so that
--- auth.tenant_id() can read it for RLS policy evaluation.
+-- public.tenant_id() can read it for RLS policy evaluation.
 
 CREATE OR REPLACE FUNCTION public.custom_access_token_hook(event jsonb)
 RETURNS jsonb
@@ -559,21 +560,21 @@ CREATE POLICY "Tenant upload public-assets" ON storage.objects
   FOR INSERT TO authenticated
   WITH CHECK (
     bucket_id = 'public-assets' AND
-    (storage.foldername(name))[1] = (select auth.tenant_id())::text
+    (storage.foldername(name))[1] = (select public.tenant_id())::text
   );
 
 CREATE POLICY "Tenant update public-assets" ON storage.objects
   FOR UPDATE TO authenticated
   USING (
     bucket_id = 'public-assets' AND
-    (storage.foldername(name))[1] = (select auth.tenant_id())::text
+    (storage.foldername(name))[1] = (select public.tenant_id())::text
   );
 
 CREATE POLICY "Tenant delete public-assets" ON storage.objects
   FOR DELETE TO authenticated
   USING (
     bucket_id = 'public-assets' AND
-    (storage.foldername(name))[1] = (select auth.tenant_id())::text
+    (storage.foldername(name))[1] = (select public.tenant_id())::text
   );
 
 -- Private documents: tenant access only
@@ -581,26 +582,26 @@ CREATE POLICY "Tenant read private-documents" ON storage.objects
   FOR SELECT TO authenticated
   USING (
     bucket_id = 'private-documents' AND
-    (storage.foldername(name))[1] = (select auth.tenant_id())::text
+    (storage.foldername(name))[1] = (select public.tenant_id())::text
   );
 
 CREATE POLICY "Tenant upload private-documents" ON storage.objects
   FOR INSERT TO authenticated
   WITH CHECK (
     bucket_id = 'private-documents' AND
-    (storage.foldername(name))[1] = (select auth.tenant_id())::text
+    (storage.foldername(name))[1] = (select public.tenant_id())::text
   );
 
 CREATE POLICY "Tenant update private-documents" ON storage.objects
   FOR UPDATE TO authenticated
   USING (
     bucket_id = 'private-documents' AND
-    (storage.foldername(name))[1] = (select auth.tenant_id())::text
+    (storage.foldername(name))[1] = (select public.tenant_id())::text
   );
 
 CREATE POLICY "Tenant delete private-documents" ON storage.objects
   FOR DELETE TO authenticated
   USING (
     bucket_id = 'private-documents' AND
-    (storage.foldername(name))[1] = (select auth.tenant_id())::text
+    (storage.foldername(name))[1] = (select public.tenant_id())::text
   );

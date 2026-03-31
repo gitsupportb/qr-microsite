@@ -12,7 +12,7 @@ ALTER TABLE public.business_profiles
       "consent": {"visible": true, "required": true}
     },
     "cta_text": "Get in Touch",
-    "thank_you_message": "Thank you! We'\''ll be in touch soon."
+    "thank_you_message": "Thank you! We will be in touch soon."
   }'::jsonb;
 
 COMMENT ON COLUMN public.business_profiles.lead_form_config IS
