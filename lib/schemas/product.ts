@@ -17,6 +17,7 @@ export const productSchema = z.object({
     .optional()
     .nullable(),
   image_url: z.string().url().optional().nullable().or(z.literal('')),
+  video_url: z.string().url('Must be a valid URL').optional().nullable().or(z.literal('')),
   category_id: z.string().uuid().optional().nullable(),
   featured: z.boolean().default(false),
   visible: z.boolean().default(true),

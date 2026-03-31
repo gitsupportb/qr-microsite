@@ -102,6 +102,21 @@ export async function updateProfile(formData: {
   return { success: true }
 }
 
+export async function updateEmail(newEmail: string) {
+  const { supabase } = await getAuthenticatedTenant()
+
+  const email = newEmail.trim()
+  if (!email) {
+    return { error: 'Email is required' }
+  }
+
+  const { error } = await supabase.auth.updateUser({ email })
+  if (error) return { error: error.message }
+
+  revalidatePath('/admin/profile')
+  return { success: 'Confirmation email sent to your new address. Check your inbox.' }
+}
+
 export async function updatePassword(formData: {
   currentPassword: string
   newPassword: string

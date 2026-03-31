@@ -133,3 +133,15 @@
 .glass { @apply bg-white/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/[0.03]; }
 .glass-strong { @apply bg-white/70 backdrop-blur-2xl border border-white/25 shadow-lg shadow-black/[0.04]; }
 .glass-subtle { @apply bg-white/40 backdrop-blur-lg border border-white/15; }
+
+/* Smooth scroll for anchor navigation */
+html { scroll-behavior: smooth; }
+
+/* Better tap highlight on mobile */
+* { -webkit-tap-highlight-color: transparent; }
+
+/* Prevent text size adjust on orientation change */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+/* Glass utility hover */
+.glass-hover { @apply transition-all duration-200 hover:bg-white/80 hover:shadow-md; }

@@ -67,6 +67,7 @@ export function ProductForm({
       short_description: '',
       long_description: '',
       image_url: '',
+      video_url: '',
       category_id: null,
       featured: false,
       visible: true,
@@ -81,6 +82,7 @@ export function ProductForm({
         short_description: initialData.short_description ?? '',
         long_description: initialData.long_description ?? '',
         image_url: initialData.image_url ?? '',
+        video_url: initialData.video_url ?? '',
         category_id: initialData.category_id ?? null,
         featured: initialData.featured,
         visible: initialData.visible,
@@ -91,6 +93,7 @@ export function ProductForm({
         short_description: '',
         long_description: '',
         image_url: '',
+        video_url: '',
         category_id: null,
         featured: false,
         visible: true,
@@ -170,6 +173,20 @@ export function ProductForm({
             onUploadComplete={(url) => setValue('image_url', url)}
             label="Product Image (max 5MB)"
           />
+
+          <div className="space-y-2">
+            <Label htmlFor="product-video-url">Video URL</Label>
+            <Input
+              id="product-video-url"
+              placeholder="https://youtube.com/watch?v=..."
+              {...register('video_url')}
+            />
+            {errors.video_url && (
+              <p className="text-sm text-red-600">
+                {errors.video_url.message}
+              </p>
+            )}
+          </div>
 
           <div className="space-y-2">
             <Label htmlFor="product-category">Category</Label>

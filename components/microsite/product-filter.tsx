@@ -2,12 +2,17 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { Package, X, Download, FileText } from 'lucide-react'
+import { Package, X, Download, FileText, Play } from 'lucide-react'
 import { trackEvent } from '@/lib/analytics'
 import type { ProductWithCategory } from '@/lib/queries/microsite'
 import type { Database } from '@/lib/supabase/types'
 
 type DocumentRow = Database['public']['Tables']['documents']['Row']
+
+function getYouTubeEmbedUrl(url: string): string | null {
+  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/)
+  return match ? `https://www.youtube.com/embed/${match[1]}` : null
+}
 
 interface ProductFilterProps {
   products: ProductWithCategory[]
@@ -176,6 +181,38 @@ export function ProductFilter({ products, categories, tenantId, businessProfileI
                   {selectedProduct.long_description}
                 </p>
               )}
+
+              {/* Video embed */}
+              {selectedProduct.video_url && (() => {
+                const embedUrl = getYouTubeEmbedUrl(selectedProduct.video_url!)
+                if (embedUrl) {
+                  return (
+                    <div className="mt-4 overflow-hidden rounded-xl border border-white/30">
+                      <div className="relative aspect-video w-full">
+                        <iframe
+                          src={embedUrl}
+                          title={`${selectedProduct.title} video`}
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                          className="absolute inset-0 h-full w-full"
+                        />
+                      </div>
+                    </div>
+                  )
+                }
+                // Non-YouTube video: show as a link
+                return (
+                  <a
+                    href={selectedProduct.video_url!}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-4 flex items-center gap-2 rounded-xl bg-white/50 backdrop-blur-sm border border-white/30 px-3 py-2.5 text-sm transition-all duration-200 hover:bg-white/70"
+                  >
+                    <Play className="size-4 shrink-0 text-blue-600" />
+                    <span className="min-w-0 flex-1 font-medium text-slate-800">Watch Video</span>
+                  </a>
+                )
+              })()}
 
               {/* Linked documents */}
               {productDocs.length > 0 && (

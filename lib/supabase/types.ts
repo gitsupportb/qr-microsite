@@ -276,6 +276,7 @@ export type Database = {
           short_description: string | null
           long_description: string | null
           image_url: string | null
+          video_url: string | null
           featured: boolean
           visible: boolean
           sort_order: number
@@ -292,6 +293,7 @@ export type Database = {
           short_description?: string | null
           long_description?: string | null
           image_url?: string | null
+          video_url?: string | null
           featured?: boolean
           visible?: boolean
           sort_order?: number
@@ -308,6 +310,7 @@ export type Database = {
           short_description?: string | null
           long_description?: string | null
           image_url?: string | null
+          video_url?: string | null
           featured?: boolean
           visible?: boolean
           sort_order?: number

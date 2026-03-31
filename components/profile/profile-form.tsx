@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { updateProfile, updatePassword } from '@/lib/actions/profile'
+import { updateProfile, updatePassword, updateEmail } from '@/lib/actions/profile'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -29,6 +29,10 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
   const [slug, setSlug] = useState(initialData.slug)
   const [isProfilePending, startProfileTransition] = useTransition()
 
+  // Email state
+  const [email, setEmail] = useState(initialData.email)
+  const [isEmailPending, startEmailTransition] = useTransition()
+
   // Password state
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
@@ -43,6 +47,18 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
         toast.error(result.error)
       } else {
         toast.success('Profile updated successfully')
+      }
+    })
+  }
+
+  const handleEmailSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    startEmailTransition(async () => {
+      const result = await updateEmail(email)
+      if ('error' in result) {
+        toast.error(result.error)
+      } else {
+        toast.success(result.success)
       }
     })
   }
@@ -89,15 +105,27 @@ export function ProfileForm({ initialData }: ProfileFormProps) {
           <form onSubmit={handleProfileSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={initialData.email}
-                disabled
-                className="bg-muted"
-              />
+              <div className="flex gap-2">
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="your@email.com"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="shrink-0"
+                  disabled={isEmailPending || email === initialData.email}
+                  onClick={handleEmailSubmit}
+                >
+                  {isEmailPending ? 'Sending...' : 'Update Email'}
+                </Button>
+              </div>
               <p className="text-xs text-muted-foreground">
-                Email cannot be changed
+                A confirmation email will be sent to your new address.
               </p>
             </div>
 

@@ -1,5 +1,4 @@
 import { Download } from 'lucide-react'
-import { createAdminClient } from '@/lib/supabase/admin'
 import { DocumentLink } from '@/components/microsite/document-link'
 import type { Database } from '@/lib/supabase/types'
 
@@ -27,9 +26,12 @@ function formatType(type: string): string {
   return type.split('_').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
 }
 
-type DocumentWithUrl = DocumentRow & { downloadUrl: string | null }
-
-export async function DocumentSection({
+/**
+ * Document section that uses /api/documents/[docId] for downloads.
+ * Each click generates a fresh signed URL — links never expire.
+ * No server-side Supabase client needed (pure Server Component).
+ */
+export function DocumentSection({
   documents,
   tenantSlug,
   tenantId,
@@ -38,22 +40,6 @@ export async function DocumentSection({
   const visibleDocs = documents.filter((doc) => doc.visibility !== 'private')
 
   if (visibleDocs.length === 0) return null
-
-  // Use service role client for signed URLs — no JWT expiry issues
-  const supabase = createAdminClient()
-
-  const docsWithUrls: DocumentWithUrl[] = await Promise.all(
-    visibleDocs.map(async (doc) => {
-      if (doc.storage_path) {
-        // 7-day signed URL using service role (no JWT dependency)
-        const { data } = await supabase.storage
-          .from('private-documents')
-          .createSignedUrl(doc.storage_path, 60 * 60 * 24 * 7)
-        return { ...doc, downloadUrl: data?.signedUrl ?? doc.file_url }
-      }
-      return { ...doc, downloadUrl: doc.file_url }
-    })
-  )
 
   return (
     <section id="catalog" className="px-5 sm:px-8" aria-label="Documents & Brochures">
@@ -64,23 +50,26 @@ export async function DocumentSection({
           </p>
 
           <div className="divide-y divide-slate-200/50">
-            {docsWithUrls.map((doc) => (
-              <div key={doc.id} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
-                <span className={`block h-2 w-2 shrink-0 rounded-full ${dotColor(doc.type)}`} />
+            {visibleDocs.map((doc) => {
+              // Use the API route for fresh signed URLs on every click
+              const downloadHref = `/api/documents/${doc.id}`
 
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium leading-snug text-slate-800">
-                    {doc.title}
-                  </p>
-                  <p className="text-[10px] uppercase tracking-wide text-slate-400">
-                    {formatType(doc.type)}
-                  </p>
-                </div>
+              return (
+                <div key={doc.id} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
+                  <span className={`block h-2 w-2 shrink-0 rounded-full ${dotColor(doc.type)}`} />
 
-                {doc.downloadUrl && (
-                  tenantId && businessProfileId ? (
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium leading-snug text-slate-800">
+                      {doc.title}
+                    </p>
+                    <p className="text-[10px] uppercase tracking-wide text-slate-400">
+                      {formatType(doc.type)}
+                    </p>
+                  </div>
+
+                  {tenantId && businessProfileId ? (
                     <DocumentLink
-                      href={doc.downloadUrl}
+                      href={downloadHref}
                       tenantId={tenantId}
                       businessProfileId={businessProfileId}
                       documentId={doc.id}
@@ -93,18 +82,16 @@ export async function DocumentSection({
                     </DocumentLink>
                   ) : (
                     <a
-                      href={doc.downloadUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      href={downloadHref}
                       className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-xl bg-white/50 backdrop-blur-sm border border-white/30 px-3 text-xs font-medium text-blue-600 transition-all duration-200 hover:bg-white/70"
                     >
                       <Download className="size-3.5" />
                       <span>Download</span>
                     </a>
-                  )
-                )}
-              </div>
-            ))}
+                  )}
+                </div>
+              )
+            })}
           </div>
         </div>
       </div>
