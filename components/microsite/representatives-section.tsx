@@ -1,13 +1,5 @@
 import Image from 'next/image'
 import { Download, Mail, MessageCircle } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from '@/components/ui/card'
 import type { Database } from '@/lib/supabase/types'
 
 type RepresentativeRow = Database['public']['Tables']['representatives']['Row']
@@ -31,33 +23,31 @@ export function RepresentativesSection({
   }
 
   return (
-    <section id="contact" className="px-4 py-8 sm:px-6">
-      <h2 className="mb-6 text-xl font-bold sm:text-2xl">Your Contacts</h2>
+    <section id="contact" className="px-5 sm:px-8">
+      <div className="mx-auto max-w-xl border-t border-[var(--foreground)]/5 py-8">
+        <p className="mb-5 text-xs font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
+          Your Contacts
+        </p>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        {reps.map((rep) => (
-          <Card
-            key={rep.id}
-            className={
-              rep.is_primary
-                ? 'ring-2 ring-primary/30'
-                : ''
-            }
-          >
-            <CardHeader>
-              <div className="flex items-start gap-3">
-                {/* Rep photo or initials */}
+        <div className="space-y-3">
+          {reps.map((rep) => (
+            <div
+              key={rep.id}
+              className="flex items-center gap-3 rounded-lg ring-1 ring-[var(--foreground)]/5 p-3"
+            >
+              {/* Rep photo or initials */}
+              <div className="relative shrink-0">
                 {rep.image_url ? (
                   <Image
                     src={rep.image_url}
                     alt={`${rep.name} photo`}
-                    width={56}
-                    height={56}
+                    width={40}
+                    height={40}
                     loading="lazy"
-                    className="h-14 w-14 shrink-0 rounded-full object-cover"
+                    className="h-10 w-10 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-muted text-lg font-semibold text-muted-foreground">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--primary)]/8 text-sm font-medium text-[var(--foreground)]">
                     {rep.name
                       .split(' ')
                       .map((n) => n.charAt(0))
@@ -66,63 +56,60 @@ export function RepresentativesSection({
                       .slice(0, 2)}
                   </div>
                 )}
-
-                <div className="min-w-0 flex-1">
-                  <CardTitle>
-                    <h3 className="text-base font-semibold">{rep.name}</h3>
-                  </CardTitle>
-                  {rep.title && (
-                    <CardDescription>{rep.title}</CardDescription>
-                  )}
-                  {rep.is_primary && (
-                    <Badge variant="default" className="mt-1 text-[10px]">
-                      Primary Contact
-                    </Badge>
-                  )}
-                </div>
+                {/* Primary indicator dot */}
+                {rep.is_primary && (
+                  <span className="absolute -right-0.5 -top-0.5 block h-2.5 w-2.5 rounded-full bg-[var(--primary)] ring-2 ring-[var(--background)]" />
+                )}
               </div>
-            </CardHeader>
 
-            <CardContent>
-              <div className="flex flex-wrap gap-2">
-                {/* Save Contact vCard link */}
+              {/* Name + title */}
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium leading-tight text-[var(--foreground)]">
+                  {rep.name}
+                </p>
+                {rep.title && (
+                  <p className="text-xs text-[var(--muted-foreground)]">
+                    {rep.title}
+                  </p>
+                )}
+              </div>
+
+              {/* Action buttons as icon-only circles */}
+              <div className="flex shrink-0 items-center gap-1.5">
                 <a
                   href={`/api/vcard/${rep.id}`}
                   download
-                  className="inline-flex h-9 min-w-[44px] items-center gap-1.5 rounded-lg border border-border bg-background px-3 text-sm font-medium transition-colors hover:bg-muted"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[var(--muted-foreground)] transition-colors hover:bg-[var(--foreground)]/5 hover:text-[var(--foreground)]"
                   aria-label={`Save ${rep.name} contact`}
                 >
                   <Download className="size-4" />
-                  <span>Save Contact</span>
                 </a>
 
-                {/* WhatsApp link */}
                 {rep.whatsapp && (
                   <a
                     href={`https://wa.me/${cleanWhatsAppNumber(rep.whatsapp)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex h-9 min-w-[44px] items-center justify-center rounded-lg border border-border bg-background px-2.5 text-sm transition-colors hover:bg-muted"
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[var(--muted-foreground)] transition-colors hover:bg-[var(--foreground)]/5 hover:text-[var(--foreground)]"
                     aria-label={`WhatsApp ${rep.name}`}
                   >
                     <MessageCircle className="size-4" />
                   </a>
                 )}
 
-                {/* Email link */}
                 {rep.email && (
                   <a
                     href={`mailto:${rep.email}`}
-                    className="inline-flex h-9 min-w-[44px] items-center justify-center rounded-lg border border-border bg-background px-2.5 text-sm transition-colors hover:bg-muted"
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[var(--muted-foreground)] transition-colors hover:bg-[var(--foreground)]/5 hover:text-[var(--foreground)]"
                     aria-label={`Email ${rep.name}`}
                   >
                     <Mail className="size-4" />
                   </a>
                 )}
               </div>
-            </CardContent>
-          </Card>
-        ))}
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   )

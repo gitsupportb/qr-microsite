@@ -166,33 +166,40 @@ export function StickyCtaBar({
     return null
   }
 
-  const ctaButtons = ctas.map((cta) => {
-    const Icon = CTA_ICON_MAP[cta.type] ?? Globe
-    return (
-      <Button
-        key={cta.type}
-        variant="ghost"
-        className="flex h-11 min-w-0 flex-1 flex-col items-center gap-1 text-xs"
-        onClick={() => handleCtaAction(cta.type, cta.destination)}
-        aria-label={cta.label}
-      >
-        <Icon className="size-5" />
-        <span className="max-w-full truncate">{cta.label}</span>
-      </Button>
-    )
-  })
+  // Use icon-only on mobile when 3+ CTAs for a tighter layout
+  const useIconOnly = ctas.length >= 3
 
   return (
     <>
-      {/* Mobile: fixed bottom bar */}
+      {/* Mobile: fixed bottom bar -- refined, thinner */}
       <nav
         role="navigation"
         aria-label="Quick actions"
-        className="fixed inset-x-0 bottom-0 z-50 border-t bg-background/95 backdrop-blur-sm md:hidden"
+        className="fixed inset-x-0 bottom-0 z-50 border-t border-[var(--foreground)]/5 bg-[var(--background)]/95 backdrop-blur-sm md:hidden"
         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       >
-        <div className="mx-auto flex max-w-lg items-center justify-around px-2 py-1">
-          {ctaButtons}
+        <div className="mx-auto flex max-w-xl items-center justify-around px-2 py-1.5">
+          {ctas.map((cta) => {
+            const Icon = CTA_ICON_MAP[cta.type] ?? Globe
+            return (
+              <button
+                key={cta.type}
+                type="button"
+                className={`flex min-h-[44px] min-w-0 flex-1 flex-col items-center justify-center gap-0.5 text-[var(--muted-foreground)] transition-colors active:text-[var(--foreground)] ${
+                  useIconOnly ? 'px-1' : 'px-2'
+                }`}
+                onClick={() => handleCtaAction(cta.type, cta.destination)}
+                aria-label={cta.label}
+              >
+                <Icon className="size-4" />
+                {!useIconOnly && (
+                  <span className="max-w-full truncate text-[10px]">
+                    {cta.label}
+                  </span>
+                )}
+              </button>
+            )
+          })}
         </div>
       </nav>
 
@@ -200,20 +207,20 @@ export function StickyCtaBar({
       <nav
         role="navigation"
         aria-label="Quick actions"
-        className="hidden md:flex md:justify-center md:gap-2 md:px-4 md:py-3"
+        className="hidden px-5 sm:px-8 md:block"
       >
-        <div className="flex max-w-lg gap-2">
+        <div className="mx-auto flex max-w-xl items-center gap-2 border-t border-[var(--foreground)]/5 py-3">
           {ctas.map((cta) => {
             const Icon = CTA_ICON_MAP[cta.type] ?? Globe
             return (
               <Button
                 key={cta.type}
                 variant="outline"
-                className="flex h-11 items-center gap-2 text-sm"
+                className="h-9 gap-1.5 rounded-full border-[var(--foreground)]/10 px-3.5 text-xs font-medium"
                 onClick={() => handleCtaAction(cta.type, cta.destination)}
                 aria-label={cta.label}
               >
-                <Icon className="size-4" />
+                <Icon className="size-3.5" />
                 <span>{cta.label}</span>
               </Button>
             )

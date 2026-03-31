@@ -1,7 +1,6 @@
 'use client'
 
 import { Phone, Mail, MessageCircle, Globe, MapPin } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { trackEvent } from '@/lib/analytics'
 import type { BusinessProfile } from '@/lib/queries/microsite'
 
@@ -21,10 +20,6 @@ interface CommunicationButtonsProps {
   businessProfileId?: string
 }
 
-/**
- * Strip non-digit characters from a phone number for use in wa.me links.
- * Preserves the leading + if present.
- */
 function cleanPhone(phone: string): string {
   const hasPlus = phone.startsWith('+')
   const digits = phone.replace(/\D/g, '')
@@ -48,72 +43,34 @@ export function CommunicationButtons({
   const channels: CommChannel[] = []
 
   if (profile.phone && channelsConfig?.call !== false) {
-    channels.push({
-      key: 'call',
-      label: 'Call',
-      icon: Phone,
-      href: `tel:${profile.phone}`,
-    })
+    channels.push({ key: 'call', label: 'Call', icon: Phone, href: `tel:${profile.phone}` })
   }
-
   if (profile.email && channelsConfig?.email !== false) {
-    channels.push({
-      key: 'email',
-      label: 'Email',
-      icon: Mail,
-      href: `mailto:${profile.email}`,
-    })
+    channels.push({ key: 'email', label: 'Email', icon: Mail, href: `mailto:${profile.email}` })
   }
-
-  // Check for a WhatsApp number: first from representatives, then from profile phone
-  const whatsappNumber =
-    profile.representatives?.find((r) => r.whatsapp)?.whatsapp ??
-    profile.phone
+  const whatsappNumber = profile.representatives?.find((r) => r.whatsapp)?.whatsapp ?? profile.phone
   if (whatsappNumber && channelsConfig?.whatsapp !== false) {
-    channels.push({
-      key: 'whatsapp',
-      label: 'WhatsApp',
-      icon: MessageCircle,
-      href: `https://wa.me/${cleanPhone(whatsappNumber)}`,
-      external: true,
-    })
+    channels.push({ key: 'whatsapp', label: 'WhatsApp', icon: MessageCircle, href: `https://wa.me/${cleanPhone(whatsappNumber)}`, external: true })
   }
-
   if (profile.website && channelsConfig?.website !== false) {
-    channels.push({
-      key: 'website',
-      label: 'Website',
-      icon: Globe,
-      href: profile.website,
-      external: true,
-    })
+    channels.push({ key: 'website', label: 'Website', icon: Globe, href: profile.website, external: true })
   }
-
   if (profile.address && channelsConfig?.maps !== false) {
-    channels.push({
-      key: 'maps',
-      label: 'Location',
-      icon: MapPin,
-      href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(profile.address)}`,
-      external: true,
-    })
+    channels.push({ key: 'maps', label: 'Location', icon: MapPin, href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(profile.address)}`, external: true })
   }
 
-  if (channels.length === 0) {
-    return null
-  }
+  if (channels.length === 0) return null
 
   return (
-    <section id="communication" className="px-4 py-4 sm:px-6">
-      <h2 className="sr-only">Contact</h2>
-      <div className="mx-auto flex max-w-lg flex-wrap justify-center gap-2">
+    <nav id="communication" aria-label="Contact options" className="px-5 py-5 sm:px-8">
+      <div className="mx-auto grid max-w-xl grid-cols-5 gap-1">
         {channels.map((ch) => {
           const Icon = ch.icon
           return (
-            <Button
+            <button
               key={ch.key}
-              variant="outline"
-              className="flex h-11 items-center gap-2 text-sm"
+              type="button"
+              className="group flex flex-col items-center gap-1.5 rounded-xl py-3 text-foreground/70 transition-colors hover:bg-muted hover:text-foreground active:scale-95"
               aria-label={ch.label}
               onClick={() => {
                 if (tenantId) {
@@ -127,12 +84,14 @@ export function CommunicationButtons({
                 }
               }}
             >
-              <Icon className="size-4" />
-              <span>{ch.label}</span>
-            </Button>
+              <span className="flex size-11 items-center justify-center rounded-full bg-primary/8 text-primary transition-colors group-hover:bg-primary/15">
+                <Icon className="size-[1.125rem]" strokeWidth={2} />
+              </span>
+              <span className="text-[0.6875rem] font-medium leading-none">{ch.label}</span>
+            </button>
           )
         })}
       </div>
-    </section>
+    </nav>
   )
 }

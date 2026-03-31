@@ -1,6 +1,4 @@
-import { FileText, Download, Lock } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
+import { Download, Lock } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { DocumentLink } from '@/components/microsite/document-link'
 import type { Database } from '@/lib/supabase/types'
@@ -14,23 +12,21 @@ interface DocumentSectionProps {
   businessProfileId?: string
 }
 
-/** Map document type to a tailwind color class for the icon circle */
-function typeColor(
-  type: DocumentRow['type']
-): string {
+/** Map document type to a dot color */
+function dotColor(type: DocumentRow['type']): string {
   switch (type) {
     case 'catalog':
-      return 'bg-blue-100 text-blue-600'
+      return 'bg-blue-500'
     case 'brochure':
-      return 'bg-green-100 text-green-600'
+      return 'bg-green-500'
     case 'datasheet':
-      return 'bg-purple-100 text-purple-600'
+      return 'bg-purple-500'
     case 'certification':
-      return 'bg-amber-100 text-amber-600'
+      return 'bg-amber-500'
     case 'pricing_sheet':
-      return 'bg-rose-100 text-rose-600'
+      return 'bg-rose-500'
     default:
-      return 'bg-gray-100 text-gray-600'
+      return 'bg-gray-400'
   }
 }
 
@@ -85,75 +81,70 @@ export async function DocumentSection({
   return (
     <section
       id="catalog"
-      className="px-4 py-8 sm:px-6"
+      className="px-5 sm:px-8"
       aria-label="Documents & Brochures"
     >
-      <h2 className="mb-6 text-xl font-bold sm:text-2xl">
-        Documents &amp; Brochures
-      </h2>
+      <div className="mx-auto max-w-xl border-t border-[var(--foreground)]/5 py-8">
+        <p className="mb-5 text-xs font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
+          Documents
+        </p>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {docsWithUrls.map((doc) => (
-          <Card key={doc.id}>
-            <CardContent>
-              <div className="flex items-start gap-3">
-                {/* Document type icon */}
-                <div
-                  className={`flex size-10 shrink-0 items-center justify-center rounded-full ${typeColor(doc.type)}`}
-                >
-                  <FileText className="size-5" />
-                </div>
+        <div className="divide-y divide-[var(--foreground)]/5">
+          {docsWithUrls.map((doc) => (
+            <div key={doc.id} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
+              {/* Type dot indicator */}
+              <span className={`block h-2 w-2 shrink-0 rounded-full ${dotColor(doc.type)}`} />
 
-                <div className="min-w-0 flex-1">
-                  <p className="font-medium leading-snug">{doc.title}</p>
-                  <Badge variant="secondary" className="mt-1">
-                    {formatType(doc.type)}
-                  </Badge>
-                </div>
+              {/* Document info */}
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium leading-snug text-[var(--foreground)]">
+                  {doc.title}
+                </p>
+                <p className="text-[10px] uppercase tracking-wide text-[var(--muted-foreground)]">
+                  {formatType(doc.type)}
+                </p>
               </div>
 
-              {/* Action button */}
-              <div className="mt-3">
-                {doc.visibility === 'public' && doc.downloadUrl ? (
-                  tenantId && businessProfileId ? (
-                    <DocumentLink
-                      href={doc.downloadUrl}
-                      tenantId={tenantId}
-                      businessProfileId={businessProfileId}
-                      documentId={doc.id}
-                      documentTitle={doc.title}
-                      className="inline-flex h-9 min-w-[44px] items-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/80"
-                      ariaLabel={`Download ${doc.title}`}
-                    >
-                      <Download className="size-4" />
-                      <span>Download PDF</span>
-                    </DocumentLink>
-                  ) : (
-                    <a
-                      href={doc.downloadUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex h-9 min-w-[44px] items-center gap-1.5 rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/80"
-                      aria-label={`Download ${doc.title}`}
-                    >
-                      <Download className="size-4" />
-                      <span>Download PDF</span>
-                    </a>
-                  )
+              {/* Action link */}
+              {doc.visibility === 'public' && doc.downloadUrl ? (
+                tenantId && businessProfileId ? (
+                  <DocumentLink
+                    href={doc.downloadUrl}
+                    tenantId={tenantId}
+                    businessProfileId={businessProfileId}
+                    documentId={doc.id}
+                    documentTitle={doc.title}
+                    className="inline-flex h-9 shrink-0 items-center gap-1 text-xs font-medium text-[var(--primary)] transition-colors hover:text-[var(--primary)]/70"
+                    ariaLabel={`Download ${doc.title}`}
+                  >
+                    <Download className="size-3.5" />
+                    <span>Download</span>
+                  </DocumentLink>
                 ) : (
                   <a
-                    href="#lead-capture"
-                    className="inline-flex h-9 min-w-[44px] items-center gap-1.5 rounded-lg border border-border bg-background px-3 text-sm font-medium transition-colors hover:bg-muted"
-                    aria-label={`Request access to ${doc.title}`}
+                    href={doc.downloadUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex h-9 shrink-0 items-center gap-1 text-xs font-medium text-[var(--primary)] transition-colors hover:text-[var(--primary)]/70"
+                    aria-label={`Download ${doc.title}`}
                   >
-                    <Lock className="size-4" />
-                    <span>Request Access</span>
+                    <Download className="size-3.5" />
+                    <span>Download</span>
                   </a>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+                )
+              ) : (
+                <a
+                  href="#lead-capture"
+                  className="inline-flex h-9 shrink-0 items-center gap-1 text-xs font-medium text-[var(--muted-foreground)] transition-colors hover:text-[var(--foreground)]"
+                  aria-label={`Request access to ${doc.title}`}
+                >
+                  <Lock className="size-3.5" />
+                  <span>Request</span>
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   )

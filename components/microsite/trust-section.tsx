@@ -1,4 +1,3 @@
-import { Badge } from '@/components/ui/badge'
 import type { Json } from '@/lib/supabase/types'
 
 interface TrustSectionProps {
@@ -51,11 +50,13 @@ export function TrustSection({ trustContent }: TrustSectionProps) {
     // Text section pattern: { title, content }
     if (typeof section.content === 'string' && isNonEmpty(section.content)) {
       sections.push(
-        <div key={key} className="space-y-2">
+        <div key={key} className="space-y-1.5">
           {title && (
-            <h3 className="text-lg font-semibold">{title}</h3>
+            <h3 className="text-sm font-medium text-[var(--foreground)]">
+              {title}
+            </h3>
           )}
-          <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
+          <p className="text-sm leading-relaxed text-[var(--muted-foreground)]">
             {section.content as string}
           </p>
         </div>
@@ -67,13 +68,18 @@ export function TrustSection({ trustContent }: TrustSectionProps) {
       sections.push(
         <div key={`${key}-tags`} className="space-y-2">
           {title && (
-            <h3 className="text-lg font-semibold">{title}</h3>
+            <h3 className="text-sm font-medium text-[var(--foreground)]">
+              {title}
+            </h3>
           )}
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1.5">
             {(section.items as string[]).map((item) => (
-              <Badge key={item} variant="secondary">
+              <span
+                key={item}
+                className="inline-flex items-center rounded-full border border-[var(--foreground)]/10 bg-[var(--primary)]/8 px-2.5 py-0.5 text-xs text-[var(--foreground)]"
+              >
                 {item}
-              </Badge>
+              </span>
             ))}
           </div>
         </div>
@@ -87,9 +93,13 @@ export function TrustSection({ trustContent }: TrustSectionProps) {
   }
 
   return (
-    <section id="trust" className="px-4 py-8 sm:px-6">
-      <h2 className="mb-6 text-xl font-bold sm:text-2xl">Why Trust Us</h2>
-      <div className="space-y-6">{sections}</div>
+    <section id="trust" className="px-5 sm:px-8">
+      <div className="mx-auto max-w-xl border-t border-[var(--foreground)]/5 py-8">
+        <p className="mb-5 text-xs font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
+          Why Trust Us
+        </p>
+        <div className="space-y-5">{sections}</div>
+      </div>
     </section>
   )
 }

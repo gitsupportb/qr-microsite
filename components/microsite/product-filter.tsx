@@ -2,15 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { Package, Star } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from '@/components/ui/card'
+import { Package } from 'lucide-react'
 import { trackEvent } from '@/lib/analytics'
 import type { ProductWithCategory } from '@/lib/queries/microsite'
 
@@ -36,10 +28,10 @@ export function ProductFilter({ products, categories, tenantId, businessProfileI
 
   return (
     <div>
-      {/* Category filter chips -- horizontal scrollable */}
+      {/* Category filter tabs -- horizontal scrollable underlined text */}
       {categories.length > 0 && (
         <div
-          className="mb-6 flex gap-2 overflow-x-auto pb-2"
+          className="mb-6 flex gap-4 overflow-x-auto border-b border-[var(--foreground)]/5 pb-px"
           style={{
             WebkitOverflowScrolling: 'touch',
             scrollbarWidth: 'none',
@@ -50,29 +42,29 @@ export function ProductFilter({ products, categories, tenantId, businessProfileI
             [data-product-filters]::-webkit-scrollbar { display: none; }
           `}</style>
           <div data-product-filters="" className="contents">
-            {/* "All" chip -- always first */}
+            {/* "All" tab -- always first */}
             <button
               type="button"
               onClick={() => setActiveCategory(null)}
-              className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+              className={`shrink-0 pb-2 text-sm transition-colors ${
                 activeCategory === null
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                  ? 'border-b-2 border-[var(--primary)] font-medium text-[var(--foreground)]'
+                  : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
               }`}
             >
               All
             </button>
 
-            {/* Category chips */}
+            {/* Category tabs */}
             {categories.map((cat) => (
               <button
                 key={cat.id}
                 type="button"
                 onClick={() => setActiveCategory(cat.id)}
-                className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                className={`shrink-0 pb-2 text-sm transition-colors ${
                   activeCategory === cat.id
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                    ? 'border-b-2 border-[var(--primary)] font-medium text-[var(--foreground)]'
+                    : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
                 }`}
               >
                 {cat.name}
@@ -82,71 +74,61 @@ export function ProductFilter({ products, categories, tenantId, businessProfileI
         </div>
       )}
 
-      {/* Product card grid -- responsive 1/2/3 columns */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {/* Product card grid */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {filteredProducts.map((product) => (
-          <Card
+          <div
             key={product.id}
-            className="transition-shadow hover:shadow-md"
+            className="group relative overflow-hidden rounded-lg ring-1 ring-[var(--foreground)]/5"
             onClick={() => {
               if (tenantId) {
                 trackEvent('product_click', tenantId, { businessProfileId, metadata: { product_id: product.id, product_title: product.title } })
               }
             }}
           >
+            {/* Featured indicator -- left edge accent bar */}
+            {product.featured && (
+              <div className="absolute inset-y-0 left-0 w-0.5 bg-[var(--primary)]" />
+            )}
+
             {/* Product image */}
-            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-t-xl bg-muted">
+            <div className="relative aspect-[16/10] w-full overflow-hidden bg-[var(--foreground)]/[0.02]">
               {product.image_url ? (
                 <Image
                   src={product.image_url}
                   alt={product.title}
                   fill
                   loading="lazy"
-                  className="object-cover"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                  sizes="(max-width: 640px) 100vw, 50vw"
                 />
               ) : (
                 <div className="flex h-full w-full items-center justify-center">
-                  <Package className="size-10 text-muted-foreground/40" />
-                </div>
-              )}
-
-              {/* Featured badge overlay */}
-              {product.featured && (
-                <div className="absolute left-2 top-2">
-                  <Badge variant="default" className="gap-1 text-[10px]">
-                    <Star className="size-3" />
-                    Featured
-                  </Badge>
+                  <Package className="size-8 text-[var(--muted-foreground)]/30" />
                 </div>
               )}
             </div>
 
-            <CardHeader>
-              {/* Category badge */}
+            {/* Product info */}
+            <div className="p-3">
+              {/* Category label */}
               {product.product_categories && (
-                <div className="mb-1">
-                  <Badge variant="secondary" className="text-[10px]">
-                    {product.product_categories.name}
-                  </Badge>
-                </div>
+                <p className="mb-0.5 text-[10px] uppercase tracking-wide text-[var(--muted-foreground)]">
+                  {product.product_categories.name}
+                </p>
               )}
 
-              <CardTitle>
-                <span className="line-clamp-1 text-base font-semibold">
-                  {product.title}
-                </span>
-              </CardTitle>
+              <p className="line-clamp-1 text-sm font-medium leading-snug text-[var(--foreground)]">
+                {product.title}
+              </p>
 
               {product.short_description && (
-                <CardDescription>
-                  <span className="line-clamp-2">
-                    {product.short_description}
-                  </span>
-                </CardDescription>
+                <p className="mt-0.5 line-clamp-2 text-xs leading-relaxed text-[var(--muted-foreground)]">
+                  {product.short_description}
+                </p>
               )}
-            </CardHeader>
-          </Card>
+            </div>
+          </div>
         ))}
       </div>
     </div>

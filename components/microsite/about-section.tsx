@@ -1,4 +1,3 @@
-import { Badge } from '@/components/ui/badge'
 import type { Json } from '@/lib/supabase/types'
 
 interface AboutSectionProps {
@@ -34,11 +33,13 @@ function isNonEmpty(value: unknown): boolean {
 function TextBlock({ section }: { section: TextSection | undefined }) {
   if (!section || !isNonEmpty(section.content)) return null
   return (
-    <div className="space-y-2">
+    <div className="space-y-1.5">
       {section.title && (
-        <h3 className="text-lg font-semibold">{section.title}</h3>
+        <h3 className="text-sm font-medium text-[var(--foreground)]">
+          {section.title}
+        </h3>
       )}
-      <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
+      <p className="text-sm leading-relaxed text-[var(--muted-foreground)]">
         {section.content}
       </p>
     </div>
@@ -50,13 +51,18 @@ function TagChips({ section }: { section: TagSection | undefined }) {
   return (
     <div className="space-y-2">
       {section.title && (
-        <h3 className="text-lg font-semibold">{section.title}</h3>
+        <h3 className="text-sm font-medium text-[var(--foreground)]">
+          {section.title}
+        </h3>
       )}
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-1.5">
         {section.items!.map((item) => (
-          <Badge key={item} variant="secondary">
+          <span
+            key={item}
+            className="inline-flex items-center rounded-full border border-[var(--foreground)]/10 bg-[var(--primary)]/8 px-2.5 py-0.5 text-xs text-[var(--foreground)]"
+          >
             {item}
-          </Badge>
+          </span>
         ))}
       </div>
     </div>
@@ -87,25 +93,29 @@ export function AboutSection({ aboutContent }: AboutSectionProps) {
   }
 
   return (
-    <section id="about" className="px-4 py-8 sm:px-6">
-      <h2 className="mb-6 text-xl font-bold sm:text-2xl">About Us</h2>
+    <section id="about" className="px-5 sm:px-8">
+      <div className="mx-auto max-w-xl border-t border-[var(--foreground)]/5 py-8">
+        <p className="mb-5 text-xs font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
+          About
+        </p>
 
-      <div className="space-y-6">
-        <TextBlock section={content.about_us} />
+        <div className="space-y-5">
+          <TextBlock section={content.about_us} />
 
-        {hasAboutUs && hasWhyChooseUs && (
-          <hr className="border-border" />
-        )}
+          {hasAboutUs && hasWhyChooseUs && (
+            <hr className="border-[var(--foreground)]/5" />
+          )}
 
-        <TextBlock section={content.why_choose_us} />
+          <TextBlock section={content.why_choose_us} />
 
-        {(hasAboutUs || hasWhyChooseUs) && (hasSectors || hasCertifications || hasUseCases) && (
-          <hr className="border-border" />
-        )}
+          {(hasAboutUs || hasWhyChooseUs) && (hasSectors || hasCertifications || hasUseCases) && (
+            <hr className="border-[var(--foreground)]/5" />
+          )}
 
-        <TagChips section={content.sectors_served} />
-        <TagChips section={content.certifications} />
-        <TagChips section={content.use_cases} />
+          <TagChips section={content.sectors_served} />
+          <TagChips section={content.certifications} />
+          <TagChips section={content.use_cases} />
+        </div>
       </div>
     </section>
   )

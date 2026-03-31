@@ -126,7 +126,7 @@ export default async function MicrositePage({ params }: MicrositePageProps) {
   }
 
   return (
-    <main role="main" className="flex min-h-screen flex-col pb-20 md:pb-0">
+    <main role="main" className="flex min-h-screen flex-col bg-background pb-16 md:pb-0">
       {sectionOrder.map((sectionId) => (
         <Fragment key={sectionId}>{sectionMap[sectionId]}</Fragment>
       ))}

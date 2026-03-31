@@ -43,9 +43,13 @@ export function ProductShowcase({ products, tenantId, businessProfileId }: Produ
   const categories = Array.from(categoryMap.values())
 
   return (
-    <section id="products" className="px-4 py-8 sm:px-6" aria-label="Products">
-      <h2 className="mb-6 text-xl font-bold sm:text-2xl">Our Products</h2>
-      <ProductFilter products={visibleProducts} categories={categories} tenantId={tenantId} businessProfileId={businessProfileId} />
+    <section id="products" className="px-5 sm:px-8" aria-label="Products">
+      <div className="mx-auto max-w-xl border-t border-[var(--foreground)]/5 py-8">
+        <p className="mb-5 text-xs font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
+          Products
+        </p>
+        <ProductFilter products={visibleProducts} categories={categories} tenantId={tenantId} businessProfileId={businessProfileId} />
+      </div>
     </section>
   )
 }

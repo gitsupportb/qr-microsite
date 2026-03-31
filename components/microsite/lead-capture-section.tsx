@@ -28,12 +28,17 @@ export function LeadCaptureSection({
   return (
     <section
       id="lead-capture"
-      className="bg-muted/30 px-4 py-8 sm:px-6"
+      className="bg-[var(--primary)]/[0.03] px-5 sm:px-8"
       aria-label="Contact form"
     >
-      <div className="mx-auto max-w-lg">
-        <h2 className="mb-1 text-xl font-bold sm:text-2xl">{ctaText}</h2>
-        <p className="mb-6 text-sm text-muted-foreground">
+      <div className="mx-auto max-w-xl py-8">
+        <p className="mb-1 text-xs font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
+          Contact
+        </p>
+        <h2 className="mb-1 text-base font-medium text-[var(--foreground)]">
+          {ctaText}
+        </h2>
+        <p className="mb-5 text-sm text-[var(--muted-foreground)]">
           Leave your details and we&apos;ll follow up
         </p>
 
