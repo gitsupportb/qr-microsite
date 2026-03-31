@@ -51,6 +51,39 @@ const BORDER_RADIUS_OPTIONS: {
   { value: '1rem', label: 'Pill (16px)' },
 ]
 
+const THEME_PRESETS: { name: string; description: string; tokens: Partial<ThemeTokens> }[] = [
+  {
+    name: 'Clinical Blue',
+    description: 'Professional medical blue',
+    tokens: { primaryColor: '#2563eb', primaryForeground: '#ffffff', accentColor: '#3b82f6', accentForeground: '#ffffff', backgroundColor: '#ffffff', foregroundColor: '#0f172a', borderRadius: '0.5rem', fontScale: 'default' },
+  },
+  {
+    name: 'Forest Green',
+    description: 'Natural trust and growth',
+    tokens: { primaryColor: '#16a34a', primaryForeground: '#ffffff', accentColor: '#22c55e', accentForeground: '#ffffff', backgroundColor: '#ffffff', foregroundColor: '#14532d', borderRadius: '0.5rem', fontScale: 'default' },
+  },
+  {
+    name: 'Royal Purple',
+    description: 'Premium and innovative',
+    tokens: { primaryColor: '#7c3aed', primaryForeground: '#ffffff', accentColor: '#a78bfa', accentForeground: '#ffffff', backgroundColor: '#ffffff', foregroundColor: '#1e1b4b', borderRadius: '1rem', fontScale: 'default' },
+  },
+  {
+    name: 'Warm Coral',
+    description: 'Energetic and approachable',
+    tokens: { primaryColor: '#ea580c', primaryForeground: '#ffffff', accentColor: '#f97316', accentForeground: '#ffffff', backgroundColor: '#fffbeb', foregroundColor: '#431407', borderRadius: '0.5rem', fontScale: 'default' },
+  },
+  {
+    name: 'Slate Minimal',
+    description: 'Clean and modern',
+    tokens: { primaryColor: '#334155', primaryForeground: '#ffffff', accentColor: '#64748b', accentForeground: '#ffffff', backgroundColor: '#f8fafc', foregroundColor: '#0f172a', borderRadius: '0rem', fontScale: 'compact' },
+  },
+  {
+    name: 'Dark Luxe',
+    description: 'Bold dark with gold accent',
+    tokens: { primaryColor: '#d97706', primaryForeground: '#000000', accentColor: '#fbbf24', accentForeground: '#000000', backgroundColor: '#0c0a09', foregroundColor: '#fafaf9', borderRadius: '0.5rem', fontScale: 'spacious' },
+  },
+]
+
 type BackgroundPreset = 'white' | 'light-gray' | 'custom'
 
 function getBackgroundPreset(color: string): BackgroundPreset {
@@ -120,6 +153,41 @@ export function ThemeSettings({ config }: ThemeSettingsProps) {
     <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
       {/* Settings Column */}
       <div className="space-y-6">
+        {/* Theme Presets */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Theme Presets</CardTitle>
+            <CardDescription>
+              Quick-start with a pre-designed theme, then customize further.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {THEME_PRESETS.map((preset) => (
+                <button
+                  key={preset.name}
+                  type="button"
+                  onClick={() => {
+                    const full = { ...tokens, ...preset.tokens } as ThemeTokens
+                    setTokens(full)
+                    setBgPreset(getBackgroundPreset(full.backgroundColor))
+                    toast.success(`Applied "${preset.name}" preset`)
+                  }}
+                  className="group flex flex-col items-start gap-1.5 rounded-xl border border-white/30 bg-white/40 p-3 text-left backdrop-blur-sm transition-all hover:bg-white/60 hover:shadow-sm"
+                >
+                  <div className="flex gap-1">
+                    <span className="block size-4 rounded-full border border-white/40" style={{ backgroundColor: preset.tokens.primaryColor }} />
+                    <span className="block size-4 rounded-full border border-white/40" style={{ backgroundColor: preset.tokens.accentColor }} />
+                    <span className="block size-4 rounded-full border border-white/40" style={{ backgroundColor: preset.tokens.backgroundColor }} />
+                  </div>
+                  <span className="text-xs font-medium text-slate-700">{preset.name}</span>
+                  <span className="text-[10px] leading-tight text-slate-400">{preset.description}</span>
+                </button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Color Section */}
         <Card>
           <CardHeader>
