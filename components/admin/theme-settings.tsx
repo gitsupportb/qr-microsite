@@ -82,6 +82,36 @@ const THEME_PRESETS: { name: string; description: string; tokens: Partial<ThemeT
     description: 'Bold dark with gold accent',
     tokens: { primaryColor: '#d97706', primaryForeground: '#000000', accentColor: '#fbbf24', accentForeground: '#000000', backgroundColor: '#0c0a09', foregroundColor: '#fafaf9', borderRadius: '0.5rem', fontScale: 'spacious' },
   },
+  {
+    name: 'Linktree Green',
+    description: 'Classic bio-link style',
+    tokens: { primaryColor: '#43e660', primaryForeground: '#000000', accentColor: '#39d353', accentForeground: '#000000', backgroundColor: '#f3f3f1', foregroundColor: '#1a1a1a', borderRadius: '1rem', fontScale: 'default' },
+  },
+  {
+    name: 'Neon Night',
+    description: 'Dark with vibrant neon links',
+    tokens: { primaryColor: '#e879f9', primaryForeground: '#000000', accentColor: '#22d3ee', accentForeground: '#000000', backgroundColor: '#0a0a0a', foregroundColor: '#f5f5f5', borderRadius: '1rem', fontScale: 'default' },
+  },
+  {
+    name: 'Ocean Breeze',
+    description: 'Calm teal-blue gradient feel',
+    tokens: { primaryColor: '#0891b2', primaryForeground: '#ffffff', accentColor: '#06b6d4', accentForeground: '#000000', backgroundColor: '#ecfeff', foregroundColor: '#164e63', borderRadius: '0.5rem', fontScale: 'default' },
+  },
+  {
+    name: 'Sunset Glow',
+    description: 'Warm gradient vibes',
+    tokens: { primaryColor: '#e11d48', primaryForeground: '#ffffff', accentColor: '#fb923c', accentForeground: '#000000', backgroundColor: '#fff1f2', foregroundColor: '#1c1917', borderRadius: '1rem', fontScale: 'spacious' },
+  },
+  {
+    name: 'Monochrome',
+    description: 'Elegant black and white',
+    tokens: { primaryColor: '#171717', primaryForeground: '#fafafa', accentColor: '#525252', accentForeground: '#fafafa', backgroundColor: '#fafafa', foregroundColor: '#0a0a0a', borderRadius: '0rem', fontScale: 'compact' },
+  },
+  {
+    name: 'Candy Pop',
+    description: 'Fun and playful pastels',
+    tokens: { primaryColor: '#ec4899', primaryForeground: '#ffffff', accentColor: '#a855f7', accentForeground: '#ffffff', backgroundColor: '#fdf2f8', foregroundColor: '#1e1b4b', borderRadius: '1rem', fontScale: 'spacious' },
+  },
 ]
 
 type BackgroundPreset = 'white' | 'light-gray' | 'custom'
