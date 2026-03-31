@@ -142,17 +142,19 @@ export function LeadCaptureForm({
     return (
       <div className="flex flex-col items-center gap-3 py-8 text-center">
         <CheckCircle className="size-12 text-green-500" />
-        <p className="text-lg font-semibold">Submitted!</p>
-        <p className="text-sm text-muted-foreground">{thankYouMessage}</p>
+        <p className="text-lg font-semibold tracking-tight text-slate-800">Submitted!</p>
+        <p className="text-sm text-slate-500">{thankYouMessage}</p>
       </div>
     )
   }
+
+  const glassInputClass = "bg-white/50 border-white/30 focus:bg-white/80 focus:border-blue-500/30 backdrop-blur-sm transition-all duration-200"
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
       {/* Email -- required, full width */}
       <div className="space-y-1.5">
-        <Label htmlFor={`${formLocation}-email`}>
+        <Label htmlFor={`${formLocation}-email`} className="text-slate-600">
           Email <span className="text-destructive">*</span>
         </Label>
         <Input
@@ -160,6 +162,7 @@ export function LeadCaptureForm({
           type="email"
           placeholder="you@company.com"
           aria-invalid={!!errors.email}
+          className={glassInputClass}
           {...register('email')}
         />
         {errors.email && (
@@ -170,12 +173,13 @@ export function LeadCaptureForm({
       {/* Full name and Phone -- 2-column on sm+ */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-1.5">
-          <Label htmlFor={`${formLocation}-full_name`}>Full Name</Label>
+          <Label htmlFor={`${formLocation}-full_name`} className="text-slate-600">Full Name</Label>
           <Input
             id={`${formLocation}-full_name`}
             type="text"
             placeholder="Jane Smith"
             aria-invalid={!!errors.full_name}
+            className={glassInputClass}
             {...register('full_name')}
           />
           {errors.full_name && (
@@ -186,12 +190,13 @@ export function LeadCaptureForm({
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor={`${formLocation}-phone`}>Phone</Label>
+          <Label htmlFor={`${formLocation}-phone`} className="text-slate-600">Phone</Label>
           <Input
             id={`${formLocation}-phone`}
             type="tel"
             placeholder="+1 234 567 890"
             aria-invalid={!!errors.phone}
+            className={glassInputClass}
             {...register('phone')}
           />
           {errors.phone && (
@@ -202,12 +207,13 @@ export function LeadCaptureForm({
 
       {/* Company -- full width */}
       <div className="space-y-1.5">
-        <Label htmlFor={`${formLocation}-company`}>Company</Label>
+        <Label htmlFor={`${formLocation}-company`} className="text-slate-600">Company</Label>
         <Input
           id={`${formLocation}-company`}
           type="text"
           placeholder="Acme Corp"
           aria-invalid={!!errors.company}
+          className={glassInputClass}
           {...register('company')}
         />
         {errors.company && (
@@ -218,12 +224,12 @@ export function LeadCaptureForm({
       {/* Interest type -- native select for mobile simplicity */}
       {categories.length > 0 && (
         <div className="space-y-1.5">
-          <Label htmlFor={`${formLocation}-interest_type`}>
+          <Label htmlFor={`${formLocation}-interest_type`} className="text-slate-600">
             Interest
           </Label>
           <select
             id={`${formLocation}-interest_type`}
-            className="h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 md:text-sm"
+            className="h-8 w-full min-w-0 rounded-xl bg-white/50 border border-white/30 backdrop-blur-sm px-2.5 py-1 text-base text-slate-800 transition-all duration-200 outline-none placeholder:text-slate-400 focus:bg-white/80 focus:border-blue-500/30 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-white/20 disabled:opacity-50 md:text-sm"
             defaultValue=""
             {...register('interest_type')}
           >
@@ -245,12 +251,13 @@ export function LeadCaptureForm({
 
       {/* Message -- textarea */}
       <div className="space-y-1.5">
-        <Label htmlFor={`${formLocation}-message`}>Message</Label>
+        <Label htmlFor={`${formLocation}-message`} className="text-slate-600">Message</Label>
         <Textarea
           id={`${formLocation}-message`}
           placeholder="Tell us what you're interested in..."
           rows={3}
           aria-invalid={!!errors.message}
+          className={glassInputClass}
           {...register('message')}
         />
         {errors.message && (
@@ -263,7 +270,7 @@ export function LeadCaptureForm({
         <input
           id={`${formLocation}-consent`}
           type="checkbox"
-          className="mt-1 size-4 shrink-0 rounded border-input accent-primary"
+          className="mt-1 size-4 shrink-0 rounded border-white/30 accent-primary"
           aria-invalid={!!errors.consent}
           {...register('consent', {
             setValueAs: (v: boolean) => (v === true ? true : undefined),
@@ -271,7 +278,7 @@ export function LeadCaptureForm({
         />
         <Label
           htmlFor={`${formLocation}-consent`}
-          className="text-xs leading-relaxed text-muted-foreground"
+          className="text-xs leading-relaxed text-slate-400"
         >
           I agree to be contacted regarding my inquiry. My information will be
           handled in accordance with the privacy policy.{' '}
@@ -282,7 +289,7 @@ export function LeadCaptureForm({
         <p className="text-xs text-destructive">{errors.consent.message}</p>
       )}
 
-      {/* Submit button */}
+      {/* Submit button -- solid primary, not glass */}
       <Button
         type="submit"
         className="w-full"

@@ -57,53 +57,55 @@ export async function DocumentSection({
 
   return (
     <section id="catalog" className="px-5 sm:px-8" aria-label="Documents & Brochures">
-      <div className="mx-auto max-w-xl border-t border-[var(--foreground)]/5 py-8">
-        <p className="mb-5 text-xs font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
-          Documents
-        </p>
+      <div className="mx-auto max-w-xl py-8">
+        <div className="rounded-2xl bg-white/60 backdrop-blur-xl border border-white/20 p-5 shadow-lg shadow-black/[0.03]">
+          <p className="mb-5 text-[0.6875rem] uppercase tracking-[0.1em] text-slate-400 font-medium">
+            Documents
+          </p>
 
-        <div className="divide-y divide-[var(--foreground)]/5">
-          {docsWithUrls.map((doc) => (
-            <div key={doc.id} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
-              <span className={`block h-2 w-2 shrink-0 rounded-full ${dotColor(doc.type)}`} />
+          <div className="divide-y divide-slate-200/50">
+            {docsWithUrls.map((doc) => (
+              <div key={doc.id} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
+                <span className={`block h-2 w-2 shrink-0 rounded-full ${dotColor(doc.type)}`} />
 
-              <div className="min-w-0 flex-1">
-                <p className="text-sm font-medium leading-snug text-[var(--foreground)]">
-                  {doc.title}
-                </p>
-                <p className="text-[10px] uppercase tracking-wide text-[var(--muted-foreground)]">
-                  {formatType(doc.type)}
-                </p>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium leading-snug text-slate-800">
+                    {doc.title}
+                  </p>
+                  <p className="text-[10px] uppercase tracking-wide text-slate-400">
+                    {formatType(doc.type)}
+                  </p>
+                </div>
+
+                {doc.downloadUrl && (
+                  tenantId && businessProfileId ? (
+                    <DocumentLink
+                      href={doc.downloadUrl}
+                      tenantId={tenantId}
+                      businessProfileId={businessProfileId}
+                      documentId={doc.id}
+                      documentTitle={doc.title}
+                      className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-xl bg-white/50 backdrop-blur-sm border border-white/30 px-3 text-xs font-medium text-blue-600 transition-all duration-200 hover:bg-white/70"
+                      ariaLabel={`Download ${doc.title}`}
+                    >
+                      <Download className="size-3.5" />
+                      <span>Download</span>
+                    </DocumentLink>
+                  ) : (
+                    <a
+                      href={doc.downloadUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-xl bg-white/50 backdrop-blur-sm border border-white/30 px-3 text-xs font-medium text-blue-600 transition-all duration-200 hover:bg-white/70"
+                    >
+                      <Download className="size-3.5" />
+                      <span>Download</span>
+                    </a>
+                  )
+                )}
               </div>
-
-              {doc.downloadUrl && (
-                tenantId && businessProfileId ? (
-                  <DocumentLink
-                    href={doc.downloadUrl}
-                    tenantId={tenantId}
-                    businessProfileId={businessProfileId}
-                    documentId={doc.id}
-                    documentTitle={doc.title}
-                    className="inline-flex h-9 shrink-0 items-center gap-1 text-xs font-medium text-[var(--primary)] transition-colors hover:text-[var(--primary)]/70"
-                    ariaLabel={`Download ${doc.title}`}
-                  >
-                    <Download className="size-3.5" />
-                    <span>Download</span>
-                  </DocumentLink>
-                ) : (
-                  <a
-                    href={doc.downloadUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex h-9 shrink-0 items-center gap-1 text-xs font-medium text-[var(--primary)] transition-colors hover:text-[var(--primary)]/70"
-                  >
-                    <Download className="size-3.5" />
-                    <span>Download</span>
-                  </a>
-                )
-              )}
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>

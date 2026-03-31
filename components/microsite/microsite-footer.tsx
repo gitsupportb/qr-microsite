@@ -11,56 +11,58 @@ export function MicrositeFooter({ profile }: MicrositeFooterProps) {
     profile
 
   return (
-    <footer className="mt-auto border-t border-[var(--foreground)]/5 px-5 sm:px-8">
+    <footer className="mt-auto px-5 sm:px-8">
       <div className="mx-auto max-w-xl py-6">
-        <div className="space-y-2">
-          {/* Company name */}
-          <p className="text-sm font-medium text-[var(--foreground)]">
-            {company_name}
-          </p>
+        <div className="rounded-xl bg-white/40 backdrop-blur-lg border border-white/15 p-4">
+          <div className="space-y-2">
+            {/* Company name */}
+            <p className="text-sm font-semibold tracking-tight text-slate-800">
+              {company_name}
+            </p>
 
-          {/* Event context + contact in a compact block */}
-          <div className="space-y-1 text-xs text-[var(--muted-foreground)]">
-            {event_name && (
-              <p className="flex items-center gap-1.5">
-                <Calendar className="size-3 shrink-0" />
-                <span>
-                  {event_name}
-                  {stand_number && ` \u00b7 Stand ${stand_number}`}
-                </span>
-              </p>
-            )}
+            {/* Event context + contact in a compact block */}
+            <div className="space-y-1 text-xs text-slate-400">
+              {event_name && (
+                <p className="flex items-center gap-1.5">
+                  <Calendar className="size-3 shrink-0" />
+                  <span>
+                    {event_name}
+                    {stand_number && ` \u00b7 Stand ${stand_number}`}
+                  </span>
+                </p>
+              )}
 
-            {/* Client-side visit date */}
-            <EventFooter />
+              {/* Client-side visit date */}
+              <EventFooter />
 
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-              {phone && (
-                <span className="flex items-center gap-1">
-                  <Phone className="size-3 shrink-0" />
-                  {phone}
-                </span>
-              )}
-              {email && (
-                <span className="flex items-center gap-1">
-                  <Mail className="size-3 shrink-0" />
-                  {email}
-                </span>
-              )}
-              {website && (
-                <span className="flex items-center gap-1">
-                  <Globe className="size-3 shrink-0" />
-                  {website.replace(/^https?:\/\//, '')}
-                </span>
-              )}
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                {phone && (
+                  <span className="flex items-center gap-1">
+                    <Phone className="size-3 shrink-0" />
+                    {phone}
+                  </span>
+                )}
+                {email && (
+                  <span className="flex items-center gap-1">
+                    <Mail className="size-3 shrink-0" />
+                    {email}
+                  </span>
+                )}
+                {website && (
+                  <span className="flex items-center gap-1">
+                    <Globe className="size-3 shrink-0" />
+                    {website.replace(/^https?:\/\//, '')}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Platform attribution */}
-        <p className="mt-4 text-[10px] text-[var(--muted-foreground)]/40">
-          Powered by QR Microsite Platform
-        </p>
+          {/* Platform attribution */}
+          <p className="mt-4 text-[10px] text-slate-300">
+            Powered by QR Microsite Platform
+          </p>
+        </div>
       </div>
     </footer>
   )

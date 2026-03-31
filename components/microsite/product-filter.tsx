@@ -32,19 +32,19 @@ export function ProductFilter({ products, categories, tenantId, businessProfileI
 
   return (
     <div>
-      {/* Category filter tabs */}
+      {/* Category filter tabs -- glass pill style */}
       {categories.length > 0 && (
         <div
-          className="mb-6 flex gap-4 overflow-x-auto border-b border-[var(--foreground)]/5 pb-px"
+          className="mb-6 flex gap-2 overflow-x-auto pb-px"
           style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none' }}
         >
           <button
             type="button"
             onClick={() => setActiveCategory(null)}
-            className={`shrink-0 pb-2 text-sm transition-colors ${
+            className={`shrink-0 rounded-full px-3.5 py-1.5 text-sm transition-all duration-200 ${
               activeCategory === null
-                ? 'border-b-2 border-[var(--primary)] font-medium text-[var(--foreground)]'
-                : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
+                ? 'bg-white/70 backdrop-blur-sm shadow-sm border border-white/25 font-medium text-slate-800'
+                : 'text-slate-400 hover:text-slate-600 hover:bg-white/30'
             }`}
           >
             All
@@ -54,10 +54,10 @@ export function ProductFilter({ products, categories, tenantId, businessProfileI
               key={cat.id}
               type="button"
               onClick={() => setActiveCategory(cat.id)}
-              className={`shrink-0 pb-2 text-sm transition-colors ${
+              className={`shrink-0 rounded-full px-3.5 py-1.5 text-sm transition-all duration-200 ${
                 activeCategory === cat.id
-                  ? 'border-b-2 border-[var(--primary)] font-medium text-[var(--foreground)]'
-                  : 'text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
+                  ? 'bg-white/70 backdrop-blur-sm shadow-sm border border-white/25 font-medium text-slate-800'
+                  : 'text-slate-400 hover:text-slate-600 hover:bg-white/30'
               }`}
             >
               {cat.name}
@@ -66,13 +66,13 @@ export function ProductFilter({ products, categories, tenantId, businessProfileI
         </div>
       )}
 
-      {/* Product card grid */}
+      {/* Product card grid -- glass-strong */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {filteredProducts.map((product) => (
           <button
             key={product.id}
             type="button"
-            className="group relative overflow-hidden rounded-lg text-left ring-1 ring-[var(--foreground)]/5 transition-shadow hover:ring-[var(--foreground)]/10 hover:shadow-sm"
+            className="group relative overflow-hidden rounded-2xl bg-white/70 backdrop-blur-2xl border border-white/25 text-left shadow-lg shadow-black/[0.04] transition-all duration-300 hover:bg-white/80 hover:shadow-xl hover:shadow-black/[0.05]"
             onClick={() => {
               setSelectedProduct(product)
               if (tenantId) {
@@ -81,10 +81,10 @@ export function ProductFilter({ products, categories, tenantId, businessProfileI
             }}
           >
             {product.featured && (
-              <div className="absolute inset-y-0 left-0 z-10 w-0.5 bg-[var(--primary)]" />
+              <div className="absolute inset-y-0 left-0 z-10 w-0.5 bg-blue-500" />
             )}
 
-            <div className="relative aspect-[16/10] w-full overflow-hidden bg-[var(--foreground)]/[0.02]">
+            <div className="relative aspect-[16/10] w-full overflow-hidden rounded-t-2xl bg-slate-100/50">
               {product.image_url ? (
                 <Image
                   src={product.image_url}
@@ -96,22 +96,22 @@ export function ProductFilter({ products, categories, tenantId, businessProfileI
                 />
               ) : (
                 <div className="flex h-full w-full items-center justify-center">
-                  <Package className="size-8 text-[var(--muted-foreground)]/30" />
+                  <Package className="size-8 text-slate-300" />
                 </div>
               )}
             </div>
 
             <div className="p-3">
               {product.product_categories && (
-                <p className="mb-0.5 text-[10px] uppercase tracking-wide text-[var(--muted-foreground)]">
+                <p className="mb-0.5 text-[10px] uppercase tracking-wide text-slate-400">
                   {product.product_categories.name}
                 </p>
               )}
-              <p className="line-clamp-1 text-sm font-medium leading-snug text-[var(--foreground)]">
+              <p className="line-clamp-1 text-sm font-medium leading-snug text-slate-800">
                 {product.title}
               </p>
               {product.short_description && (
-                <p className="mt-0.5 line-clamp-2 text-xs leading-relaxed text-[var(--muted-foreground)]">
+                <p className="mt-0.5 line-clamp-2 text-xs leading-relaxed text-slate-500">
                   {product.short_description}
                 </p>
               )}
@@ -120,18 +120,18 @@ export function ProductFilter({ products, categories, tenantId, businessProfileI
         ))}
       </div>
 
-      {/* Product detail modal */}
+      {/* Product detail modal -- glass background */}
       {selectedProduct && (
         <div
-          className="fixed inset-0 z-[100] flex items-end justify-center bg-black/40 backdrop-blur-sm sm:items-center sm:p-4"
+          className="fixed inset-0 z-[100] flex items-end justify-center bg-black/30 backdrop-blur-sm sm:items-center sm:p-4"
           onClick={(e) => { if (e.target === e.currentTarget) setSelectedProduct(null) }}
         >
-          <div className="relative max-h-[90vh] w-full overflow-y-auto rounded-t-2xl bg-[var(--background)] sm:max-w-lg sm:rounded-2xl">
+          <div className="relative max-h-[90vh] w-full overflow-y-auto rounded-t-2xl bg-white/80 backdrop-blur-2xl border border-white/20 shadow-2xl shadow-black/[0.08] sm:max-w-lg sm:rounded-2xl">
             {/* Close button */}
             <button
               type="button"
               onClick={() => setSelectedProduct(null)}
-              className="absolute right-3 top-3 z-10 flex size-8 items-center justify-center rounded-full bg-[var(--foreground)]/5 text-[var(--muted-foreground)] transition-colors hover:bg-[var(--foreground)]/10"
+              className="absolute right-3 top-3 z-10 flex size-8 items-center justify-center rounded-full bg-white/50 backdrop-blur-sm border border-white/30 text-slate-400 transition-all duration-200 hover:bg-white/70 hover:text-slate-600"
               aria-label="Close"
             >
               <X className="size-4" />
@@ -139,7 +139,7 @@ export function ProductFilter({ products, categories, tenantId, businessProfileI
 
             {/* Product image */}
             {selectedProduct.image_url && (
-              <div className="relative aspect-[16/9] w-full overflow-hidden rounded-t-2xl bg-[var(--foreground)]/[0.02]">
+              <div className="relative aspect-[16/9] w-full overflow-hidden rounded-t-2xl bg-slate-100/50">
                 <Image
                   src={selectedProduct.image_url}
                   alt={selectedProduct.title}
@@ -153,34 +153,34 @@ export function ProductFilter({ products, categories, tenantId, businessProfileI
             <div className="p-5 sm:p-6">
               {/* Category */}
               {selectedProduct.product_categories && (
-                <p className="mb-1 text-[10px] uppercase tracking-wide text-[var(--primary)]">
+                <p className="mb-1 text-[10px] uppercase tracking-wide text-blue-600">
                   {selectedProduct.product_categories.name}
                 </p>
               )}
 
               {/* Title */}
-              <h3 className="text-xl font-bold leading-tight text-[var(--foreground)]">
+              <h3 className="text-xl font-semibold leading-tight tracking-tight text-slate-800">
                 {selectedProduct.title}
               </h3>
 
               {/* Short description */}
               {selectedProduct.short_description && (
-                <p className="mt-2 text-sm leading-relaxed text-[var(--muted-foreground)]">
+                <p className="mt-2 text-sm leading-relaxed text-slate-500">
                   {selectedProduct.short_description}
                 </p>
               )}
 
               {/* Long description */}
               {selectedProduct.long_description && (
-                <p className="mt-3 text-sm leading-relaxed text-[var(--foreground)]/80">
+                <p className="mt-3 text-sm leading-relaxed text-slate-600">
                   {selectedProduct.long_description}
                 </p>
               )}
 
               {/* Linked documents */}
               {productDocs.length > 0 && (
-                <div className="mt-5 border-t border-[var(--foreground)]/5 pt-4">
-                  <p className="mb-3 text-xs font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
+                <div className="mt-5 border-t border-slate-200/50 pt-4">
+                  <p className="mb-3 text-[0.6875rem] uppercase tracking-[0.1em] text-slate-400 font-medium">
                     Documents
                   </p>
                   <div className="space-y-2">
@@ -190,11 +190,11 @@ export function ProductFilter({ products, categories, tenantId, businessProfileI
                         href={doc.downloadUrl || doc.file_url || '#'}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2.5 rounded-lg bg-[var(--foreground)]/[0.03] px-3 py-2.5 text-sm transition-colors hover:bg-[var(--foreground)]/[0.06]"
+                        className="flex items-center gap-2.5 rounded-xl bg-white/50 backdrop-blur-sm border border-white/30 px-3 py-2.5 text-sm transition-all duration-200 hover:bg-white/70"
                       >
-                        <FileText className="size-4 shrink-0 text-[var(--primary)]" />
-                        <span className="min-w-0 flex-1 font-medium text-[var(--foreground)]">{doc.title}</span>
-                        <Download className="size-3.5 shrink-0 text-[var(--muted-foreground)]" />
+                        <FileText className="size-4 shrink-0 text-blue-600" />
+                        <span className="min-w-0 flex-1 font-medium text-slate-800">{doc.title}</span>
+                        <Download className="size-3.5 shrink-0 text-slate-400" />
                       </a>
                     ))}
                   </div>
@@ -203,11 +203,11 @@ export function ProductFilter({ products, categories, tenantId, businessProfileI
 
               {/* All documents link if no product-specific docs */}
               {productDocs.length === 0 && documents.length > 0 && (
-                <div className="mt-5 border-t border-[var(--foreground)]/5 pt-4">
+                <div className="mt-5 border-t border-slate-200/50 pt-4">
                   <a
                     href="#catalog"
                     onClick={() => setSelectedProduct(null)}
-                    className="inline-flex items-center gap-1.5 text-xs font-medium text-[var(--primary)]"
+                    className="inline-flex items-center gap-1.5 text-xs font-medium text-blue-600"
                   >
                     <FileText className="size-3.5" />
                     View all documents

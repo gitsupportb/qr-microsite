@@ -77,41 +77,43 @@ export function ShareButton({
 
   return (
     <section id="share" className="px-5 sm:px-8">
-      <div className="mx-auto flex max-w-xl items-center gap-3 border-t border-[var(--foreground)]/5 py-4">
-        <span className="text-xs text-[var(--muted-foreground)]">Share</span>
+      <div className="mx-auto max-w-xl py-4">
+        <div className="flex items-center gap-3 rounded-xl bg-white/40 backdrop-blur-lg border border-white/15 px-4 py-3">
+          <span className="text-xs text-slate-400">Share</span>
 
-        <div className="flex items-center gap-1">
-          {canNativeShare && (
+          <div className="flex items-center gap-1">
+            {canNativeShare && (
+              <button
+                type="button"
+                className="inline-flex h-8 items-center gap-1.5 rounded-full bg-white/50 backdrop-blur-sm border border-white/30 px-3 text-xs text-slate-500 transition-all duration-200 hover:bg-white/70 hover:text-slate-700"
+                onClick={handleNativeShare}
+                aria-label="Share via device share menu"
+              >
+                <Share2 className="size-3.5" />
+                <span>Share</span>
+              </button>
+            )}
+
             <button
               type="button"
-              className="inline-flex h-8 items-center gap-1.5 rounded-full px-2.5 text-xs text-[var(--muted-foreground)] transition-colors hover:bg-[var(--foreground)]/5 hover:text-[var(--foreground)]"
-              onClick={handleNativeShare}
-              aria-label="Share via device share menu"
+              className="inline-flex h-8 items-center gap-1.5 rounded-full bg-white/50 backdrop-blur-sm border border-white/30 px-3 text-xs text-slate-500 transition-all duration-200 hover:bg-white/70 hover:text-slate-700"
+              onClick={handleWhatsAppShare}
+              aria-label="Share via WhatsApp"
             >
-              <Share2 className="size-3.5" />
-              <span>Share</span>
+              <MessageCircle className="size-3.5" />
+              <span>WhatsApp</span>
             </button>
-          )}
 
-          <button
-            type="button"
-            className="inline-flex h-8 items-center gap-1.5 rounded-full px-2.5 text-xs text-[var(--muted-foreground)] transition-colors hover:bg-[var(--foreground)]/5 hover:text-[var(--foreground)]"
-            onClick={handleWhatsAppShare}
-            aria-label="Share via WhatsApp"
-          >
-            <MessageCircle className="size-3.5" />
-            <span>WhatsApp</span>
-          </button>
-
-          <button
-            type="button"
-            className="inline-flex h-8 items-center gap-1.5 rounded-full px-2.5 text-xs text-[var(--muted-foreground)] transition-colors hover:bg-[var(--foreground)]/5 hover:text-[var(--foreground)]"
-            onClick={handleCopyLink}
-            aria-label="Copy page link to clipboard"
-          >
-            <Copy className="size-3.5" />
-            <span>Copy Link</span>
-          </button>
+            <button
+              type="button"
+              className="inline-flex h-8 items-center gap-1.5 rounded-full bg-white/50 backdrop-blur-sm border border-white/30 px-3 text-xs text-slate-500 transition-all duration-200 hover:bg-white/70 hover:text-slate-700"
+              onClick={handleCopyLink}
+              aria-label="Copy page link to clipboard"
+            >
+              <Copy className="size-3.5" />
+              <span>Copy Link</span>
+            </button>
+          </div>
         </div>
       </div>
     </section>

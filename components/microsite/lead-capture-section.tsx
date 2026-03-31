@@ -28,30 +28,32 @@ export function LeadCaptureSection({
   return (
     <section
       id="lead-capture"
-      className="bg-[var(--primary)]/[0.03] px-5 sm:px-8"
+      className="px-5 sm:px-8"
       aria-label="Contact form"
     >
       <div className="mx-auto max-w-xl py-8">
-        <p className="mb-1 text-xs font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
-          Contact
-        </p>
-        <h2 className="mb-1 text-base font-medium text-[var(--foreground)]">
-          {ctaText}
-        </h2>
-        <p className="mb-5 text-sm text-[var(--muted-foreground)]">
-          Leave your details and we&apos;ll follow up
-        </p>
+        <div className="rounded-2xl bg-white/70 backdrop-blur-2xl border border-white/25 p-5 shadow-lg shadow-black/[0.04]">
+          <p className="mb-1 text-[0.6875rem] uppercase tracking-[0.1em] text-slate-400 font-medium">
+            Contact
+          </p>
+          <h2 className="mb-1 text-base font-semibold tracking-tight text-slate-800">
+            {ctaText}
+          </h2>
+          <p className="mb-5 text-sm text-slate-500">
+            Leave your details and we&apos;ll follow up
+          </p>
 
-        <LeadCaptureForm
-          tenantId={tenantId}
-          businessProfileId={businessProfileId}
-          tenantSlug={tenantSlug}
-          eventName={eventName}
-          categories={categories}
-          formLocation="inline"
-          ctaText={ctaText}
-          thankYouMessage={thankYouMessage}
-        />
+          <LeadCaptureForm
+            tenantId={tenantId}
+            businessProfileId={businessProfileId}
+            tenantSlug={tenantSlug}
+            eventName={eventName}
+            categories={categories}
+            formLocation="inline"
+            ctaText={ctaText}
+            thankYouMessage={thankYouMessage}
+          />
+        </div>
       </div>
     </section>
   )

@@ -128,3 +128,8 @@
     @apply font-sans;
   }
 }
+
+/* Glassmorphism utilities */
+.glass { @apply bg-white/60 backdrop-blur-xl border border-white/20 shadow-lg shadow-black/[0.03]; }
+.glass-strong { @apply bg-white/70 backdrop-blur-2xl border border-white/25 shadow-lg shadow-black/[0.04]; }
+.glass-subtle { @apply bg-white/40 backdrop-blur-lg border border-white/15; }

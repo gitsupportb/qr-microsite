@@ -33,9 +33,9 @@ export default async function MicrositePage({ params }: MicrositePageProps) {
   // No business profile yet -- show setup message
   if (!profile) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center p-6 text-center">
-        <h1 className="text-2xl font-bold">{tenant.name}</h1>
-        <p className="mt-4 text-muted-foreground">
+      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20 p-6 text-center">
+        <h1 className="text-2xl font-semibold tracking-tight text-slate-800">{tenant.name}</h1>
+        <p className="mt-4 text-slate-500">
           This microsite is being set up. Check back soon.
         </p>
       </main>
@@ -126,7 +126,7 @@ export default async function MicrositePage({ params }: MicrositePageProps) {
   }
 
   return (
-    <main role="main" className="flex min-h-screen flex-col bg-background pb-16 md:pb-0">
+    <main role="main" className="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20 pb-16 md:pb-0">
       {sectionOrder.map((sectionId) => (
         <Fragment key={sectionId}>{sectionMap[sectionId]}</Fragment>
       ))}

@@ -34,17 +34,19 @@ export function ProductShowcase({ products, tenantId, businessProfileId, documen
 
   return (
     <section id="products" className="px-5 sm:px-8" aria-label="Products">
-      <div className="mx-auto max-w-xl border-t border-[var(--foreground)]/5 py-8">
-        <p className="mb-5 text-xs font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
-          Products
-        </p>
-        <ProductFilter
-          products={visibleProducts}
-          categories={Array.from(categoryMap.values())}
-          tenantId={tenantId}
-          businessProfileId={businessProfileId}
-          documents={documents}
-        />
+      <div className="mx-auto max-w-xl py-8">
+        <div className="rounded-2xl bg-white/60 backdrop-blur-xl border border-white/20 p-5 shadow-lg shadow-black/[0.03]">
+          <p className="mb-5 text-[0.6875rem] uppercase tracking-[0.1em] text-slate-400 font-medium">
+            Products
+          </p>
+          <ProductFilter
+            products={visibleProducts}
+            categories={Array.from(categoryMap.values())}
+            tenantId={tenantId}
+            businessProfileId={businessProfileId}
+            documents={documents}
+          />
+        </div>
       </div>
     </section>
   )

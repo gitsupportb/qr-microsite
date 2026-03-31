@@ -35,11 +35,11 @@ function TextBlock({ section }: { section: TextSection | undefined }) {
   return (
     <div className="space-y-1.5">
       {section.title && (
-        <h3 className="text-sm font-medium text-[var(--foreground)]">
+        <h3 className="text-sm font-medium text-slate-800">
           {section.title}
         </h3>
       )}
-      <p className="text-sm leading-relaxed text-[var(--muted-foreground)]">
+      <p className="text-sm leading-relaxed text-slate-500">
         {section.content}
       </p>
     </div>
@@ -51,7 +51,7 @@ function TagChips({ section }: { section: TagSection | undefined }) {
   return (
     <div className="space-y-2">
       {section.title && (
-        <h3 className="text-sm font-medium text-[var(--foreground)]">
+        <h3 className="text-sm font-medium text-slate-800">
           {section.title}
         </h3>
       )}
@@ -59,7 +59,7 @@ function TagChips({ section }: { section: TagSection | undefined }) {
         {section.items!.map((item) => (
           <span
             key={item}
-            className="inline-flex items-center rounded-full border border-[var(--foreground)]/10 bg-[var(--primary)]/8 px-2.5 py-0.5 text-xs text-[var(--foreground)]"
+            className="inline-flex items-center rounded-full bg-blue-500/8 border border-blue-500/10 px-2.5 py-0.5 text-xs font-medium text-blue-600"
           >
             {item}
           </span>
@@ -94,27 +94,29 @@ export function AboutSection({ aboutContent }: AboutSectionProps) {
 
   return (
     <section id="about" className="px-5 sm:px-8">
-      <div className="mx-auto max-w-xl border-t border-[var(--foreground)]/5 py-8">
-        <p className="mb-5 text-xs font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
-          About
-        </p>
+      <div className="mx-auto max-w-xl py-8">
+        <div className="rounded-2xl bg-white/60 backdrop-blur-xl border border-white/20 p-5 shadow-lg shadow-black/[0.03]">
+          <p className="mb-5 text-[0.6875rem] uppercase tracking-[0.1em] text-slate-400 font-medium">
+            About
+          </p>
 
-        <div className="space-y-5">
-          <TextBlock section={content.about_us} />
+          <div className="space-y-5">
+            <TextBlock section={content.about_us} />
 
-          {hasAboutUs && hasWhyChooseUs && (
-            <hr className="border-[var(--foreground)]/5" />
-          )}
+            {hasAboutUs && hasWhyChooseUs && (
+              <hr className="border-slate-200/50" />
+            )}
 
-          <TextBlock section={content.why_choose_us} />
+            <TextBlock section={content.why_choose_us} />
 
-          {(hasAboutUs || hasWhyChooseUs) && (hasSectors || hasCertifications || hasUseCases) && (
-            <hr className="border-[var(--foreground)]/5" />
-          )}
+            {(hasAboutUs || hasWhyChooseUs) && (hasSectors || hasCertifications || hasUseCases) && (
+              <hr className="border-slate-200/50" />
+            )}
 
-          <TagChips section={content.sectors_served} />
-          <TagChips section={content.certifications} />
-          <TagChips section={content.use_cases} />
+            <TagChips section={content.sectors_served} />
+            <TagChips section={content.certifications} />
+            <TagChips section={content.use_cases} />
+          </div>
         </div>
       </div>
     </section>

@@ -52,11 +52,11 @@ export function TrustSection({ trustContent }: TrustSectionProps) {
       sections.push(
         <div key={key} className="space-y-1.5">
           {title && (
-            <h3 className="text-sm font-medium text-[var(--foreground)]">
+            <h3 className="text-sm font-medium text-slate-800">
               {title}
             </h3>
           )}
-          <p className="text-sm leading-relaxed text-[var(--muted-foreground)]">
+          <p className="text-sm leading-relaxed text-slate-500">
             {section.content as string}
           </p>
         </div>
@@ -68,7 +68,7 @@ export function TrustSection({ trustContent }: TrustSectionProps) {
       sections.push(
         <div key={`${key}-tags`} className="space-y-2">
           {title && (
-            <h3 className="text-sm font-medium text-[var(--foreground)]">
+            <h3 className="text-sm font-medium text-slate-800">
               {title}
             </h3>
           )}
@@ -76,7 +76,7 @@ export function TrustSection({ trustContent }: TrustSectionProps) {
             {(section.items as string[]).map((item) => (
               <span
                 key={item}
-                className="inline-flex items-center rounded-full border border-[var(--foreground)]/10 bg-[var(--primary)]/8 px-2.5 py-0.5 text-xs text-[var(--foreground)]"
+                className="inline-flex items-center rounded-full bg-blue-500/8 border border-blue-500/10 px-2.5 py-0.5 text-xs font-medium text-blue-600"
               >
                 {item}
               </span>
@@ -94,11 +94,13 @@ export function TrustSection({ trustContent }: TrustSectionProps) {
 
   return (
     <section id="trust" className="px-5 sm:px-8">
-      <div className="mx-auto max-w-xl border-t border-[var(--foreground)]/5 py-8">
-        <p className="mb-5 text-xs font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
-          Why Trust Us
-        </p>
-        <div className="space-y-5">{sections}</div>
+      <div className="mx-auto max-w-xl py-8">
+        <div className="rounded-2xl bg-white/60 backdrop-blur-xl border border-white/20 p-5 shadow-lg shadow-black/[0.03]">
+          <p className="mb-5 text-[0.6875rem] uppercase tracking-[0.1em] text-slate-400 font-medium">
+            Why Trust Us
+          </p>
+          <div className="space-y-5">{sections}</div>
+        </div>
       </div>
     </section>
   )

@@ -63,34 +63,36 @@ export function CommunicationButtons({
 
   return (
     <nav id="communication" aria-label="Contact options" className="px-5 py-5 sm:px-8">
-      <div className="mx-auto grid max-w-xl grid-cols-5 gap-1">
-        {channels.map((ch) => {
-          const Icon = ch.icon
-          return (
-            <button
-              key={ch.key}
-              type="button"
-              className="group flex flex-col items-center gap-1.5 rounded-xl py-3 text-foreground/70 transition-colors hover:bg-muted hover:text-foreground active:scale-95"
-              aria-label={ch.label}
-              onClick={() => {
-                if (tenantId) {
-                  const eventType = ch.key === 'whatsapp' ? 'whatsapp_click' : 'comm_button_click' as const
-                  trackEvent(eventType, tenantId, { businessProfileId, metadata: { channel: ch.key } })
-                }
-                if (ch.external) {
-                  window.open(ch.href, '_blank', 'noopener')
-                } else {
-                  window.open(ch.href)
-                }
-              }}
-            >
-              <span className="flex size-11 items-center justify-center rounded-full bg-primary/8 text-primary transition-colors group-hover:bg-primary/15">
-                <Icon className="size-[1.125rem]" strokeWidth={2} />
-              </span>
-              <span className="text-[0.6875rem] font-medium leading-none">{ch.label}</span>
-            </button>
-          )
-        })}
+      <div className="mx-auto max-w-xl rounded-2xl bg-white/60 backdrop-blur-xl border border-white/20 p-4 shadow-lg shadow-black/[0.03]">
+        <div className="grid grid-cols-5 gap-1">
+          {channels.map((ch) => {
+            const Icon = ch.icon
+            return (
+              <button
+                key={ch.key}
+                type="button"
+                className="group flex flex-col items-center gap-1.5 rounded-xl py-3 text-slate-600 transition-all duration-200 hover:bg-white/50 active:scale-95"
+                aria-label={ch.label}
+                onClick={() => {
+                  if (tenantId) {
+                    const eventType = ch.key === 'whatsapp' ? 'whatsapp_click' : 'comm_button_click' as const
+                    trackEvent(eventType, tenantId, { businessProfileId, metadata: { channel: ch.key } })
+                  }
+                  if (ch.external) {
+                    window.open(ch.href, '_blank', 'noopener')
+                  } else {
+                    window.open(ch.href)
+                  }
+                }}
+              >
+                <span className="flex size-11 items-center justify-center rounded-full bg-blue-500/8 border border-blue-500/10 text-blue-600 transition-all duration-200 group-hover:bg-blue-500/15 group-hover:scale-105">
+                  <Icon className="size-[1.125rem]" strokeWidth={2} />
+                </span>
+                <span className="text-[0.6875rem] font-medium leading-none text-slate-500">{ch.label}</span>
+              </button>
+            )
+          })}
+        </div>
       </div>
     </nav>
   )

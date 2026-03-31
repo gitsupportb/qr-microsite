@@ -171,11 +171,11 @@ export function StickyCtaBar({
 
   return (
     <>
-      {/* Mobile: fixed bottom bar -- refined, thinner */}
+      {/* Mobile: fixed bottom bar -- glass */}
       <nav
         role="navigation"
         aria-label="Quick actions"
-        className="fixed inset-x-0 bottom-0 z-50 border-t border-[var(--foreground)]/5 bg-[var(--background)]/95 backdrop-blur-sm md:hidden"
+        className="fixed inset-x-0 bottom-0 z-50 bg-white/70 backdrop-blur-2xl border-t border-white/20 md:hidden"
         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       >
         <div className="mx-auto flex max-w-xl items-center justify-around px-2 py-1.5">
@@ -185,7 +185,7 @@ export function StickyCtaBar({
               <button
                 key={cta.type}
                 type="button"
-                className={`flex min-h-[44px] min-w-0 flex-1 flex-col items-center justify-center gap-0.5 text-[var(--muted-foreground)] transition-colors active:text-[var(--foreground)] ${
+                className={`flex min-h-[44px] min-w-0 flex-1 flex-col items-center justify-center gap-0.5 text-slate-500 transition-all duration-200 active:text-slate-800 active:scale-95 ${
                   useIconOnly ? 'px-1' : 'px-2'
                 }`}
                 onClick={() => handleCtaAction(cta.type, cta.destination)}
@@ -203,28 +203,30 @@ export function StickyCtaBar({
         </div>
       </nav>
 
-      {/* Desktop: inline section */}
+      {/* Desktop: inline section -- glass buttons */}
       <nav
         role="navigation"
         aria-label="Quick actions"
         className="hidden px-5 sm:px-8 md:block"
       >
-        <div className="mx-auto flex max-w-xl items-center gap-2 border-t border-[var(--foreground)]/5 py-3">
-          {ctas.map((cta) => {
-            const Icon = CTA_ICON_MAP[cta.type] ?? Globe
-            return (
-              <Button
-                key={cta.type}
-                variant="outline"
-                className="h-9 gap-1.5 rounded-full border-[var(--foreground)]/10 px-3.5 text-xs font-medium"
-                onClick={() => handleCtaAction(cta.type, cta.destination)}
-                aria-label={cta.label}
-              >
-                <Icon className="size-3.5" />
-                <span>{cta.label}</span>
-              </Button>
-            )
-          })}
+        <div className="mx-auto max-w-xl py-3">
+          <div className="flex items-center gap-2">
+            {ctas.map((cta) => {
+              const Icon = CTA_ICON_MAP[cta.type] ?? Globe
+              return (
+                <Button
+                  key={cta.type}
+                  variant="outline"
+                  className="h-9 gap-1.5 rounded-full bg-white/50 backdrop-blur-sm border-white/30 px-3.5 text-xs font-medium text-slate-600 hover:bg-white/70 hover:text-slate-800 transition-all duration-200"
+                  onClick={() => handleCtaAction(cta.type, cta.destination)}
+                  aria-label={cta.label}
+                >
+                  <Icon className="size-3.5" />
+                  <span>{cta.label}</span>
+                </Button>
+              )
+            })}
+          </div>
         </div>
       </nav>
     </>
