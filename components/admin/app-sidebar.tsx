@@ -35,7 +35,7 @@ const navItems = [
   { label: 'CTA Bar', href: '/admin/cta', icon: MousePointerClick, disabled: false },
   { label: 'Products', href: '/admin/products', icon: Package, disabled: false },
   { label: 'Documents', href: '/admin/documents', icon: FileText, disabled: false },
-  { label: 'Leads', href: '/admin/leads', icon: Users, disabled: true },
+  { label: 'Leads', href: '/admin/leads/settings', icon: Users, disabled: false },
   { label: 'QR Codes', href: '/admin/qr-codes', icon: QrCode, disabled: true },
   { label: 'Analytics', href: '/admin/analytics', icon: BarChart3, disabled: true },
   { label: 'Theme', href: '/admin/theme', icon: Palette, disabled: true },

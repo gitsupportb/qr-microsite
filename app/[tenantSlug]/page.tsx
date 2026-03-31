@@ -6,7 +6,8 @@ import { TrustSection } from '@/components/microsite/trust-section'
 import { RepresentativesSection } from '@/components/microsite/representatives-section'
 import { ProductShowcase } from '@/components/microsite/product-showcase'
 import { DocumentSection } from '@/components/microsite/document-section'
-import { PlaceholderSection } from '@/components/microsite/placeholder-section'
+import { LeadCaptureSection } from '@/components/microsite/lead-capture-section'
+import { LeadCaptureSheet } from '@/components/microsite/lead-capture-sheet'
 import { MicrositeFooter } from '@/components/microsite/microsite-footer'
 import { StickyCtaBar } from '@/components/microsite/sticky-cta-bar'
 import { CommunicationButtons } from '@/components/microsite/communication-buttons'
@@ -52,6 +53,18 @@ export default async function MicrositePage({ params }: MicrositePageProps) {
     .sort((a, b) => a.sort_order - b.sort_order)
     .slice(0, 4)
 
+  // Extract unique product categories for lead form interest dropdown
+  const categories = [
+    ...new Map(
+      (profile.products ?? [])
+        .filter((p) => p.product_categories)
+        .map((p) => [
+          p.product_categories!.id,
+          { id: p.product_categories!.id, name: p.product_categories!.name },
+        ])
+    ).values(),
+  ]
+
   return (
     <main role="main" className="flex min-h-screen flex-col pb-20 md:pb-0">
       <HeroSection profile={profile} />
@@ -76,7 +89,13 @@ export default async function MicrositePage({ params }: MicrositePageProps) {
         tenantSlug={tenantSlug}
       />
 
-      <PlaceholderSection id="lead-capture" label="Get in Touch" />
+      <LeadCaptureSection
+        tenantId={tenant.id}
+        businessProfileId={profile.id}
+        tenantSlug={tenantSlug}
+        eventName={profile.event_name}
+        categories={categories}
+      />
 
       <RepresentativesSection reps={reps} tenantSlug={tenantSlug} />
 
@@ -97,6 +116,14 @@ export default async function MicrositePage({ params }: MicrositePageProps) {
         tenantSlug={tenantSlug}
         companyName={profile.company_name}
         tagline={profile.tagline}
+      />
+
+      <LeadCaptureSheet
+        tenantId={tenant.id}
+        businessProfileId={profile.id}
+        tenantSlug={tenantSlug}
+        eventName={profile.event_name}
+        categories={categories}
       />
     </main>
   )
