@@ -69,7 +69,7 @@ export const getMicrositeData = cache(
             product_categories(id, name, slug)
           ),
           documents(
-            id, title, file_url, visibility, product_id, created_at
+            id, title, type, file_url, visibility, product_id, created_at
           )
         )`
       )
