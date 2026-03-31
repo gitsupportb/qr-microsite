@@ -50,7 +50,7 @@ export const getMicrositeData = cache(
       .from('tenants')
       .select(
         `id, name, slug,
-        theme_configurations(id, tokens_json, layout_variant),
+        theme_configurations(id, tokens_json),
         business_profiles(
           id, company_name, tagline, description_short, description_long,
           phone, email, website, address, event_name, stand_number,
@@ -69,7 +69,7 @@ export const getMicrositeData = cache(
             product_categories(id, name, slug)
           ),
           documents(
-            id, title, type, file_url, storage_path, visibility, product_id, created_at
+            id, title, file_url, visibility, product_id, created_at
           )
         )`
       )
@@ -81,6 +81,16 @@ export const getMicrositeData = cache(
       return null
     }
 
-    return tenant as unknown as MicrositeData
+    // PostgREST may return 1:1 relations as object instead of array
+    // Normalize to always use arrays for consistency
+    const raw = tenant as any
+    if (raw.business_profiles && !Array.isArray(raw.business_profiles)) {
+      raw.business_profiles = [raw.business_profiles]
+    }
+    if (raw.theme_configurations && !Array.isArray(raw.theme_configurations)) {
+      raw.theme_configurations = [raw.theme_configurations]
+    }
+
+    return raw as unknown as MicrositeData
   }
 )
