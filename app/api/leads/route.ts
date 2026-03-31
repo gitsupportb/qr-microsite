@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { leadSubmissionSchema } from '@/lib/schemas/lead'
+import { leadFormConfigSchema } from '@/lib/schemas/lead-form-config'
 import { rateLimit } from '@/lib/rate-limit'
+import { Resend } from 'resend'
+import { NewLeadEmail } from '@/lib/emails/new-lead'
 
 export const dynamic = 'force-dynamic'
 
@@ -73,7 +76,54 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  // 4. Return 201 with lead ID
+  // 4. Send email notification (fire-and-forget, never blocks response)
+  if (process.env.RESEND_API_KEY) {
+    try {
+      const { data: profile } = await supabase
+        .from('business_profiles')
+        .select('lead_form_config, company_name')
+        .eq('id', data.business_profile_id)
+        .single()
+
+      const parsed = leadFormConfigSchema.safeParse(
+        profile?.lead_form_config
+      )
+      const notificationEmails = parsed.success
+        ? parsed.data.notification_emails
+        : undefined
+
+      if (notificationEmails) {
+        const validEmails = notificationEmails
+          .split(',')
+          .map((e) => e.trim())
+          .filter((e) => e.length > 0 && e.includes('@'))
+
+        if (validEmails.length > 0) {
+          const resend = new Resend(process.env.RESEND_API_KEY)
+          void resend.emails.send({
+            from:
+              process.env.RESEND_FROM_EMAIL ||
+              'QR Microsite <noreply@resend.dev>',
+            to: validEmails,
+            subject: `New Lead: ${data.full_name || data.email}`,
+            react: NewLeadEmail({
+              leadName: data.full_name ?? null,
+              leadEmail: data.email,
+              leadCompany: data.company ?? null,
+              interestType: data.interest_type ?? null,
+              eventName: data.source_context.event_name ?? null,
+              pageUrl: `${process.env.NEXT_PUBLIC_APP_URL || ''}/${data.source_context.page_slug || ''}`,
+              submittedAt: new Date().toISOString(),
+            }),
+          })
+        }
+      }
+    } catch (emailErr) {
+      console.error('Email notification failed:', emailErr)
+    }
+  }
+
+  // 5. Return 201 with lead ID
   return NextResponse.json(
     { id: lead.id, message: 'Lead captured successfully' },
     { status: 201, headers: { 'X-RateLimit-Remaining': String(remaining) } }

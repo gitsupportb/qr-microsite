@@ -201,6 +201,33 @@ export function LeadFormSettings({ config }: LeadFormSettingsProps) {
         </div>
       </div>
 
+      {/* Section 4: Email Notifications */}
+      <div className="rounded-lg border bg-card p-6 text-card-foreground">
+        <h2 className="mb-4 text-lg font-semibold">Email Notifications</h2>
+        <p className="mb-4 text-sm text-muted-foreground">
+          Receive an email notification whenever a new lead is submitted.
+        </p>
+
+        <div className="space-y-2">
+          <Label htmlFor="notification_emails">Notification Email(s)</Label>
+          <Input
+            {...register('notification_emails')}
+            id="notification_emails"
+            maxLength={500}
+            placeholder="email@example.com, another@example.com"
+          />
+          <p className="text-xs text-muted-foreground">
+            Comma-separated email addresses. Leave empty to disable
+            notifications.
+          </p>
+          {errors.notification_emails && (
+            <p className="text-sm text-destructive">
+              {errors.notification_emails.message}
+            </p>
+          )}
+        </div>
+      </div>
+
       {/* Save Button */}
       <div className="flex justify-end">
         <Button type="submit" disabled={isPending}>
