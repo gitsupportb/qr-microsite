@@ -125,147 +125,150 @@ export function ProductFilter({ products, categories, tenantId, businessProfileI
         ))}
       </div>
 
-      {/* Product detail modal */}
+      {/* Product detail modal — fixed overlay, isolated from grid */}
       {selectedProduct && (
-        <div
-          className="fixed inset-0 z-[100] flex items-end justify-center bg-slate-900/40 backdrop-blur-md sm:items-center sm:p-6"
-          onClick={(e) => { if (e.target === e.currentTarget) setSelectedProduct(null) }}
-        >
+        <>
+          {/* Backdrop */}
           <div
-            className="relative max-h-[92vh] w-full overflow-y-auto overscroll-contain rounded-t-3xl bg-white/90 backdrop-blur-2xl border border-white/30 shadow-2xl shadow-black/20 sm:max-w-lg sm:rounded-3xl"
-            style={{ animation: 'slideUp 250ms ease-out' }}
-          >
-            <style>{`@keyframes slideUp { from { transform: translateY(24px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }`}</style>
+            className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm"
+            onClick={() => setSelectedProduct(null)}
+            aria-hidden="true"
+          />
 
-            {/* Close button */}
-            <button
-              type="button"
-              onClick={() => setSelectedProduct(null)}
-              className="absolute right-4 top-4 z-10 flex size-9 items-center justify-center rounded-full bg-white/70 backdrop-blur-sm border border-white/40 text-slate-500 shadow-sm transition-all duration-200 hover:bg-white hover:text-slate-800 hover:shadow-md"
-              aria-label="Close"
-            >
-              <X className="size-4" strokeWidth={2.5} />
-            </button>
+          {/* Modal container — centered on all screen sizes */}
+          <div className="fixed inset-0 z-[101] overflow-y-auto overscroll-contain">
+            <div className="flex min-h-full items-center justify-center p-4 sm:p-6">
+              <div
+                className="relative w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-black/5 sm:max-w-lg"
+                onClick={(e) => e.stopPropagation()}
+                style={{ animation: 'modalIn 200ms ease-out' }}
+              >
+                <style>{`@keyframes modalIn { from { transform: scale(0.97) translateY(8px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }`}</style>
 
-            {/* Product image */}
-            {selectedProduct.image_url ? (
-              <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-100">
-                <Image
-                  src={selectedProduct.image_url}
-                  alt={selectedProduct.title}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 640px) 100vw, 512px"
-                />
-                {/* Gradient fade into content */}
-                <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white/90 to-transparent" />
-              </div>
-            ) : (
-              <div className="flex aspect-[16/9] w-full items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50/30">
-                <Package className="size-12 text-slate-200" />
-              </div>
-            )}
+                {/* Close button — sticky top-right */}
+                <button
+                  type="button"
+                  onClick={() => setSelectedProduct(null)}
+                  className="absolute right-3 top-3 z-20 flex size-8 items-center justify-center rounded-full bg-black/10 text-white backdrop-blur-sm transition-colors hover:bg-black/20"
+                  aria-label="Close"
+                >
+                  <X className="size-4" strokeWidth={2.5} />
+                </button>
 
-            <div className="px-5 pb-6 pt-2 sm:px-6">
-              {/* Category pill */}
-              {selectedProduct.product_categories && (
-                <span className="mb-2 inline-block rounded-full bg-blue-500/8 border border-blue-500/10 px-2.5 py-0.5 text-[10px] uppercase tracking-wider font-medium text-blue-600">
-                  {selectedProduct.product_categories.name}
-                </span>
-              )}
+                {/* Product image */}
+                {selectedProduct.image_url ? (
+                  <div className="relative aspect-[3/2] w-full overflow-hidden bg-slate-100">
+                    <Image
+                      src={selectedProduct.image_url}
+                      alt={selectedProduct.title}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 640px) 100vw, 512px"
+                    />
+                  </div>
+                ) : (
+                  <div className="flex aspect-[3/2] w-full items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50">
+                    <Package className="size-12 text-slate-300" />
+                  </div>
+                )}
 
-              {/* Title */}
-              <h3 className="text-xl font-semibold leading-tight tracking-tight text-slate-900 sm:text-2xl">
-                {selectedProduct.title}
-              </h3>
+                {/* Content */}
+                <div className="p-5 sm:p-6">
+                  {/* Category */}
+                  {selectedProduct.product_categories && (
+                    <span className="mb-2 inline-block rounded-full bg-blue-50 px-2.5 py-0.5 text-[10px] uppercase tracking-wider font-semibold text-blue-600">
+                      {selectedProduct.product_categories.name}
+                    </span>
+                  )}
 
-              {/* Short description */}
-              {selectedProduct.short_description && (
-                <p className="mt-2.5 text-[0.9375rem] leading-relaxed text-slate-500">
-                  {selectedProduct.short_description}
-                </p>
-              )}
+                  <h3 className="text-lg font-bold leading-snug text-slate-900 sm:text-xl">
+                    {selectedProduct.title}
+                  </h3>
 
-              {/* Long description */}
-              {selectedProduct.long_description && (
-                <div className="mt-4 rounded-xl bg-slate-50/80 border border-slate-100 p-4">
-                  <p className="text-sm leading-relaxed text-slate-600">
-                    {selectedProduct.long_description}
-                  </p>
-                </div>
-              )}
+                  {selectedProduct.short_description && (
+                    <p className="mt-2 text-sm leading-relaxed text-slate-500">
+                      {selectedProduct.short_description}
+                    </p>
+                  )}
 
-              {/* Video embed */}
-              {selectedProduct.video_url && (() => {
-                const embedUrl = getYouTubeEmbedUrl(selectedProduct.video_url!)
-                if (embedUrl) {
-                  return (
-                    <div className="mt-5 overflow-hidden rounded-2xl border border-slate-200/60 shadow-sm">
-                      <div className="relative aspect-video w-full bg-black">
-                        <iframe
-                          src={embedUrl}
-                          title={`${selectedProduct.title} video`}
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                          className="absolute inset-0 h-full w-full"
-                        />
+                  {selectedProduct.long_description && (
+                    <div className="mt-4 rounded-lg bg-slate-50 p-4">
+                      <p className="text-sm leading-relaxed text-slate-600">
+                        {selectedProduct.long_description}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Video */}
+                  {selectedProduct.video_url && (() => {
+                    const embedUrl = getYouTubeEmbedUrl(selectedProduct.video_url!)
+                    if (embedUrl) {
+                      return (
+                        <div className="mt-4 overflow-hidden rounded-lg">
+                          <div className="relative aspect-video w-full bg-black">
+                            <iframe
+                              src={embedUrl}
+                              title={`${selectedProduct.title} video`}
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                              className="absolute inset-0 h-full w-full"
+                            />
+                          </div>
+                        </div>
+                      )
+                    }
+                    return (
+                      <a
+                        href={selectedProduct.video_url!}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-4 flex items-center gap-2 rounded-lg bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100"
+                      >
+                        <Play className="size-4 text-blue-600" />
+                        Watch Video
+                      </a>
+                    )
+                  })()}
+
+                  {/* Documents */}
+                  {productDocs.length > 0 && (
+                    <div className="mt-5 border-t border-slate-100 pt-4">
+                      <p className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-slate-400">
+                        Downloads
+                      </p>
+                      <div className="space-y-2">
+                        {productDocs.map((doc) => (
+                          <a
+                            key={doc.id}
+                            href={`/api/documents/${doc.id}`}
+                            className="flex items-center gap-3 rounded-lg bg-slate-50 px-3 py-2.5 text-sm transition-colors hover:bg-blue-50"
+                          >
+                            <FileText className="size-4 shrink-0 text-blue-600" />
+                            <span className="min-w-0 flex-1 font-medium text-slate-700">{doc.title}</span>
+                            <Download className="size-3.5 shrink-0 text-slate-400" />
+                          </a>
+                        ))}
                       </div>
                     </div>
-                  )
-                }
-                return (
-                  <a
-                    href={selectedProduct.video_url!}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-5 flex items-center gap-2.5 rounded-xl bg-slate-50 border border-slate-100 px-4 py-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100"
-                  >
-                    <Play className="size-4 shrink-0 text-blue-600" />
-                    Watch Video
-                  </a>
-                )
-              })()}
+                  )}
 
-              {/* Linked documents — uses /api/documents/[id] for never-expire URLs */}
-              {productDocs.length > 0 && (
-                <div className="mt-5 border-t border-slate-200/60 pt-4">
-                  <p className="mb-3 text-[0.6875rem] uppercase tracking-[0.12em] text-slate-400 font-medium">
-                    Downloads
-                  </p>
-                  <div className="space-y-2">
-                    {productDocs.map((doc) => (
+                  {productDocs.length === 0 && documents.length > 0 && (
+                    <div className="mt-5 border-t border-slate-100 pt-4">
                       <a
-                        key={doc.id}
-                        href={`/api/documents/${doc.id}`}
-                        className="flex items-center gap-3 rounded-xl bg-slate-50/80 border border-slate-100 px-4 py-3 text-sm transition-all duration-200 hover:bg-blue-50/80 hover:border-blue-100"
+                        href="#catalog"
+                        onClick={() => setSelectedProduct(null)}
+                        className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700"
                       >
-                        <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-blue-500/8">
-                          <FileText className="size-4 text-blue-600" />
-                        </span>
-                        <span className="min-w-0 flex-1 font-medium text-slate-700">{doc.title}</span>
-                        <Download className="size-4 shrink-0 text-slate-400" />
+                        <FileText className="size-4" />
+                        View all documents
                       </a>
-                    ))}
-                  </div>
+                    </div>
+                  )}
                 </div>
-              )}
-
-              {/* All documents link */}
-              {productDocs.length === 0 && documents.length > 0 && (
-                <div className="mt-5 border-t border-slate-200/60 pt-4">
-                  <a
-                    href="#catalog"
-                    onClick={() => setSelectedProduct(null)}
-                    className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 hover:text-blue-700"
-                  >
-                    <FileText className="size-4" />
-                    View all documents
-                  </a>
-                </div>
-              )}
+              </div>
             </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   )
