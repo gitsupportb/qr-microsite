@@ -4,6 +4,7 @@ import { HeroSection } from '@/components/microsite/hero-section'
 import { AboutSection } from '@/components/microsite/about-section'
 import { TrustSection } from '@/components/microsite/trust-section'
 import { RepresentativesSection } from '@/components/microsite/representatives-section'
+import { ProductShowcase } from '@/components/microsite/product-showcase'
 import { PlaceholderSection } from '@/components/microsite/placeholder-section'
 import { MicrositeFooter } from '@/components/microsite/microsite-footer'
 import { StickyCtaBar } from '@/components/microsite/sticky-cta-bar'
@@ -63,7 +64,7 @@ export default async function MicrositePage({ params }: MicrositePageProps) {
         }
       />
 
-      <PlaceholderSection id="products" label="Products" />
+      <ProductShowcase products={profile.products ?? []} />
 
       <AboutSection aboutContent={profile.about_content} />
 
